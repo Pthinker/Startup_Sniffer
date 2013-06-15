@@ -1,0 +1,45 @@
+
+.errorWrapper {
+    margin: 200px auto;
+    width: 559px;
+    text-align: center;
+    color: #F1F1F1;
+    text-shadow: 1px 1px #333333;
+}
+
+.errorWrapper h1{
+    font-size: 34px;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px #333333;
+
+}
+
+
+.dataTables_length {
+    float: left;
+    width: 40%;
+}
+.dataTables_paginate {
+    float: right;
+    text-align: right;
+    margin:10px 0;
+}
+
+.dataTables_paginate a{
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 15px 15px 15px 15px;
+    display: inline-block;
+    padding: 5px 14px;
+}
+
+.dataTables_info {
+    float: left;
+    width: 60%;
+}
+
+.dataTables_filter {
+    float: right;
+    text-align: right;
+    width: 50%;
+}

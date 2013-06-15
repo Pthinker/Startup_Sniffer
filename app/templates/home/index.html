@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>Awesome stuff!</h1>
+    <a class="btn btn-large btn-success" href="/predict">Get started!</a>
+</div>
+
+<hr />
+
+<div id="accordion2" class="accordion">
+    <div id="company" class="accordion-body collapse in">
+        <table class="table table-bordered data-table pull-left">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Twitter</th>
+                    <th>Website</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{record.name}}</td>
+                    <td>{{record.twitter}}</td>
+                    <td>{{record.url}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

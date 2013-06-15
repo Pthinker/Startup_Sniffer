@@ -1,0 +1,11 @@
+My InsightDataScience (http://insightdatascience.com/) data product.
+.DS_Store
+*.swp
+*.pyc
+
+config.py
+
+old/
+*_json/
+*.csv
+*.model
