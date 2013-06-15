@@ -33,3 +33,16 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+
+.DS_Store
+*.swp
+
+
+old/
+*_json/
+*.csv
+*.model
+
+config.py
+
