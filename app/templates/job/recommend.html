@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<ul class="nav">
+    <li><a href="/">Home</a></li>
+    <li><a href="/predict">Predict</a></li>
+    <li><a href="/board">Sniffer Board</a></li>
+    <li class="active"><a href="/job">Job</a></li>
+    <li><a href="/about">About</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<h1>{{ Profile.firstName }} {{ Profile.lastName }}</h1>
+{% endblock %}
+

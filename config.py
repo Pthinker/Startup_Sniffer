@@ -24,4 +24,6 @@ CB_PEOPLE_FOLDER = "scraper/scraper/crunchbase_people_json"
 CB_FINANCIAL_FOLDER = "scraper/scraper/crunchbase_financial_json"
 
 # API keys
+LINKEDIN_API_KEY = "oki2tae9xtf8"
+LINKEDIN_SECRET_KEY = "B9W8cKLz44Nj2MzD"
 

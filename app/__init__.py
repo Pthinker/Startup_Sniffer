@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g, redirect
+from flask import Flask, render_template, g, redirect, session
 from flask.ext.sqlalchemy import SQLAlchemy
 from app.models import *
 import os
@@ -22,6 +22,11 @@ def before_request():
     g.db = db
     g.app = app
 
+@app.before_first_request
+def before_first_request():
+    session['user_oauth_token'] = None
+    session['user_oauth_secret'] = None
+
 @app.route('/')
 def index():
     return redirect("/home/index")
@@ -39,4 +44,7 @@ app.register_blueprint(homeModule)
 
 from app.predict.views import predict_page as predictModule
 app.register_blueprint(predictModule)
+
+from app.job.views import job_page as jobModule
+app.register_blueprint(jobModule)
 
