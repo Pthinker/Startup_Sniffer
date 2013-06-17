@@ -28,6 +28,7 @@ def before_first_request():
     session['user_oauth_secret'] = None
 
 @app.route('/')
+@app.route('/index')
 def index():
     return redirect("/home/index")
 

@@ -128,45 +128,43 @@ class FundingMember(Base):
     financial = Column(String(200), ForeignKey("cb_people.crunch_id", ondelete='CASCADE'))
     people = Column(String(200), ForeignKey("cb_financial_organizations.crunch_id", ondelete='CASCADE'))
 
-'''
 class AngellistCompany(Base):
-    __tablename__ = 'angellist_companies'
+    __tablename__ = 'al_companies'
     
     id = Column(Integer, primary_key=True)
-    angellist_id = Column(Integer)
     name = Column(String(100), index=True)
+    angellist_id = Column(Integer)
     angellist_url = Column(String(100))
-    crunchbase_url = Column(String(100))
     logo_url = Column(String(150))
-    thumb_url = Column(String(150))
     quality = Column(Integer)
     product_desc = Column(Text)
-    high_concept = Column(Text)
+    desc = Column(Text)
     follower_count = Column(Integer)
     company_url = Column(String(100))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     twitter_url = Column(String(100))
-    markets = Column(String(200))
+    categories = Column(String(200))
     company_type = Column(String(100))
+    locations = Column(String(100))
 
 class AngellistPeople(Base):
-    __tablename__ = 'angellist_people'
+    __tablename__ = 'al_people'
     
     id = Column(Integer, primary_key=True)
-    angellist_id = Column(Integer)
     name = Column(String(100), index=True)
-    angellist_url = Column(String(100))
-    image = Column(String(150))
     bio = Column(Text)
+    angellist_id = Column(Integer)
+    angellist_url = Column(String(100))
+    image = Column(String(200))
     follower_count = Column(Integer)
-    linkedin_url = Column(String(150))
-    twitter_url = Column(String(100))
-    facebook_url = Column(String(100))
-    github_url = Column(String(100))
+    linkedin_url = Column(String(200))
+    twitter_url = Column(String(150))
+    facebook_url = Column(String(150))
     roles = Column(String(200))
     investor = Column(Boolean)
-'''
+    locations = Column(String(100))
+
 
 def store_cb_companies():
     Session = sessionmaker(bind=engine)
@@ -493,11 +491,11 @@ def store_cb_acquisition():
     session.commit()
     session.close()
 
-def store_angellist_company():
+def store_al_company():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    company_folder = "%s/angellist_company_json" % json_folder
+    company_folder = config.AL_COMPANY_FOLDER
     company_files = os.listdir(company_folder)
     for fname in company_files:
         fpath = os.path.join(company_folder, fname)
@@ -505,15 +503,13 @@ def store_angellist_company():
             com_dict = json.load(fh, strict=False)
          
         com = AngellistCompany()
-        com.angellist_id = com_dict['id']
         com.name = com_dict['name']
+        com.angellist_id = com_dict['id']
         com.angellist_url = com_dict['angellist_url']
-        com.crunchbase_url = com_dict['crunchbase_url']
         com.logo_url = com_dict['logo_url']
-        com.thumb_url = com_dict['thumb_url']
         com.quality = com_dict['quality']
         com.product_desc = com_dict['product_desc']
-        com.high_concept = com_dict['high_concept']
+        com.desc = com_dict['high_concept']
         com.follower_count = com_dict['follower_count']
         com.company_url = com_dict['company_url']
             
@@ -525,11 +521,11 @@ def store_angellist_company():
             
         com.twitter_url = com_dict['twitter_url']
 
-        markets = com_dict['markets']
+        categories = com_dict['markets']
         arr = []
-        for market in markets:
-            arr.append(market['display_name'])
-        com.markets = ",".join(arr)
+        for cat in categories:
+            arr.append(cat['display_name'])
+        com.categories = ",".join(arr)
 
         company_types = com_dict['company_type']
         arr = []
@@ -537,16 +533,22 @@ def store_angellist_company():
             arr.append(com_type['display_name'])
         com.company_type = ",".join(arr)
         
+        locations = com_dict['locations']
+        arr = []
+        for location in locations:
+            arr.append(location['name'])
+        com.locations = ",".join(arr)
+
         session.add(com)
 
     session.commit()
     session.close()
 
-def store_angellist_people():
+def store_al_people():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    people_folder = "%s/angellist_people_json" % json_folder
+    people_folder = config.AL_PEOPLE_FOLDER
     people_files = os.listdir(people_folder)
     for fname in people_files:
         fpath = os.path.join(people_folder, fname)
@@ -563,7 +565,6 @@ def store_angellist_people():
         com.twitter_url = com_dict['twitter_url']
         com.facebook_url = com_dict['facebook_url']
         com.linkedin_url = com_dict['linkedin_url']
-        com.github_url = com_dict['github_url']
         com.investor = com_dict['investor']
 
         roles = com_dict['roles']
@@ -571,6 +572,12 @@ def store_angellist_people():
         for role in roles:
             arr.append(role['display_name'])
         com.roles = ",".join(arr)
+
+        locations = com_dict['locations']
+        arr = []
+        for location in locations:
+            arr.append(location['name'])
+        com.locations = ",".join(arr)
 
         session.add(com)
 
@@ -581,11 +588,11 @@ def store_angellist_people():
 def main():
     Base.metadata.create_all(engine)
 
+    '''
     # crunchbase data
     print "Store companies info"
     store_cb_company_info()
     
-    '''
     print "Store companies"
     store_cb_companies()
  
@@ -607,12 +614,13 @@ def main():
     print "Store Exits"
     store_cb_exits()
     
+    '''
+
     # AngelList data
     print "Store angellist company"
-    store_angellist_company()
+    store_al_company()
     print "Store angellist people"
-    store_angellist_people()
-    '''
+    store_al_people()
 
 if __name__ == "__main__":
     main()
