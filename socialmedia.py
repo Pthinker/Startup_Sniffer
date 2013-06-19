@@ -64,8 +64,8 @@ def search_tweets(query=None, count=10, lang='en', result_type='recent'):
         raise TwitterError("json decoding")
 
     # parse json data
-    for x in data['statuses']:
-        print x
+    for tweet in data['statuses']:
+        print tweet["text"]
 
 def main():
     search_tweets("iphone")

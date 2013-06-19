@@ -1,23 +1,30 @@
 {% extends "base.html" %}
 
-
 {% block navbar %}
-<ul class="nav">
-    <li><a href="/">Home</a></li>
-    <li class="active"><a href="/predict">Predict</a></li>
-    <li><a href="/board">Sniffer Board</a></li>
-    <li><a href="/job">More Stuff</a></li>
-    <li><a href="/about">About</a></li>
-</ul>
+<div class="nav-collapse">
+    <ul class="nav">
+        <li><a href="/">Home</a></li>
+        <li class="active"><a href="/predict">Predict</a></li>
+        <li><a href="/board">Sniffer Board</a></li>
+        <li><a href="/job">Job</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+</div>
 {% endblock %}
 
 {% block content %}
-<div class="jumbotron row-fluid">
-    <form name="predict-form" class="form" method="POST" action="{{ url_for('predict.analyze') }}">
-        <input type="input" name='crunch_id' class="input-large" placeholder='Input Company'></input>
-        <label>Example: gameloft, cardstar, etc.</label>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<div class="hero-unit faq">
+    <div class="ac">
+        <form id="predict-form" method="post" action="{{ url_for('predict.analyze') }}">
+            <h1>Predict</h1>
+            <p>Input company, for example: square, gameloft, etc.</p>
+            <input type="text" placeholder="Type Company ..." id="crunch-id" name="crunch-id"/>
+            <a type="" class="search_button btn btn-success" onclick="formSubmit()">
+                <i class="icon-search icon-white"></i>
+            </a>
+            <!--<input type="submit" class="search_button btn btn-success" /> -->
+        </form>
+    </div>
 </div>
 
 <div class="span5">
@@ -41,5 +48,15 @@
     <h2>Probability of IPO/Acquired: {{ prob }}</h2>
 </div>
 
+{% endblock %}
+
+{% block endscript %}
+<script>
+    function formSubmit()
+    {
+        document.getElementById("predict-form").submit();
+        return false;
+    }
+</script>
 {% endblock %}
 

@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="jumbotron">
-    <h1>Awesome stuff!</h1>
+<div class="hero-unit" style="text-align:center;">
+    <h1>Data Science for Startup</h1>
     <a class="btn btn-large btn-success" href="/predict">Get started!</a>
 </div>
 
 <hr />
 
+<!--
 <div id="accordion2" class="accordion">
     <div id="company" class="accordion-body collapse in">
-        <table class="table table-bordered data-table pull-left">
+        <table class="data-table table-bordered table pull-left" id="company-table">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -30,5 +31,36 @@
         </table>
     </div>
 </div>
+-->
+
 {% endblock %}
 
+<script>
+    $(document).ready(function() {
+        $("#company-table").dataTable({
+            "oLanguage": {
+                "sEmptyTable":     "No data available in table",
+                "sInfo":           "Showing _START_ to _END_ of _TOTAL_ entries",
+                "sInfoEmpty":      "Showing 0 to 0 of 0 entries",
+                "sInfoFiltered":   "filtered from _MAX_ total entries",
+                "sInfoPostFix":    "",
+                "sInfoThousands":  ",",
+                "sLengthMenu":     "Show _MENU_ entries",
+                "sLoadingRecords": "Loading...",
+                "sProcessing":     "Processing...",
+                "sSearch":         "Search:",
+                "sZeroRecords":    "No matching records found",
+                "oPaginate": {
+                    "sFirst":    "First",
+                    "sLast":     "Last",
+                    "sNext":     "Next",
+                    "sPrevious": "Previous"
+                },
+                "oAria": {
+                    "sSortAscending":  ": activate to sort column ascending",
+                    "sSortDescending": ": activate to sort column descending"
+                }
+            },
+        });
+    });
+</script>

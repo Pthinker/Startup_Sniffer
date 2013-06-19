@@ -11,11 +11,16 @@ predict_page = Blueprint('predict', __name__, url_prefix='/predict')
 @predict_page.route('/')
 @predict_page.route('/index')
 def index():
-    return render_template("predict/index.html")
+    records = db.session.query(cb_company_info).filter(CBCompanyInfo.img != None).filter(
+            CBCompanyInfo.url != None).limit(10)
+    return render_template("predict/index.html", records=records)
 
-@predict_page.route('/analyze/', methods=['GET', 'POST'])
+@predict_page.route('/analyze/', methods=['POST'])
 def analyze():
-    crunch_id = request.form['crunch_id']
+    crunch_id = request.form.get('crunch-id', None)
+
+    #TODO: handle None case
+
     model = pickle.load(open(os.path.join(APP_STATIC, 'mobile.model')))
     df = pd.read_csv(os.path.join(APP_STATIC, 'mobile.csv'), header=0, index_col=0)
     row = np.array(df.ix[crunch_id])

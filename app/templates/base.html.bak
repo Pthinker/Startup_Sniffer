@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="InsightDataScience Project">
+        <meta name="author" content="Wei Zhang">
+        <title>{% block title %}Startup Sniffer{% endblock %}</title>
+
+        {% block css %}
+            <link href="/static/css/site.css" rel="stylesheet">
+            <link href="/static/css/bootstrap.css" rel="stylesheet">
+            <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+            
+            <style type="text/css">
+                body {
+                    padding-top: 20px;
+                    padding-bottom: 60px;
+                }
+                
+                /* Custom container */
+           
+                .container {
+                    margin: 0 auto;
+                    max-width: 1000px;
+                }
+
+                .container > hr {
+                    margin: 30px 0;
+                }
+
+                /* Main marketing message and sign up button */
+                .jumbotron {
+                    margin: 80px 0;
+                    text-align: center;
+                }
+
+                .jumbotron h1 {
+                    font-size: 100px;
+                    line-height: 1;
+                }
+                
+                .jumbotron .lead {
+                    font-size: 24px;
+                    line-height: 1.25;
+                }
+                
+                .jumbotron .btn {
+                    font-size: 21px;
+                    padding: 14px 24px;
+                }
+                
+                /* Supporting marketing content */
+                .marketing {
+                    margin: 60px 0;
+                }
+                
+                .marketing p + h4 {
+                    margin-top: 28px;
+                }
+
+                /* Customize the navbar links to be fill the entire space of the .navbar */
+                .navbar .navbar-inner {
+                    padding: 0;
+                }
+                
+                .navbar .nav {
+                    margin: 0;
+                    display: table;
+                    width: 100%;
+                }
+                
+                .navbar .nav li {
+                    display: table-cell;
+                    width: 1%;
+                    float: none;
+                }
+
+                .navbar .nav li a {
+                    font-weight: bold;
+                    text-align: center;
+                    border-left: 1px solid rgba(255,255,255,.75);
+                    border-right: 1px solid rgba(0,0,0,.1);
+                }
+                
+                .navbar .nav li:first-child a {
+                    border-left: 0;
+                    border-radius: 3px 0 0 3px;
+                }
+           
+                .navbar .nav li:last-child a {
+                    border-right: 0;
+                    border-radius: 0 3px 3px 0;
+                }
+            </style>
+        {% endblock %}
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="/static/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="masthead">
+                <h3 class="muted">Startup Sniffer</h3>
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="container">
+                            {% block navbar %}
+                            <ul class="nav">
+                                <li class="active"><a href="/">Home</a></li>
+                                <li><a href="/predict">Predict</a></li>
+                                <li><a href="/board">Sniffer Board</a></li>
+                                <li><a href="/job">Job</a></li>
+                                <li><a href="/about">About</a></li>
+                            </ul>
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div><!-- /.navbar -->
+            </div>
+
+            <div id="header">{% block header %}{% endblock %}</div>
+
+            <div id="messages-wrap">
+                <div id="messages">
+                    {% for category, msg in get_flashed_messages(with_categories=true) %}
+                        <p class="message flash-{{ category }}">{{ msg }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div id="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+
+            <hr style='clear:both' />
+
+            <div id="footer">
+                {% block footer %}
+                <p>&copy; Wei Zhang 2013</p>
+                {% endblock%}
+            </div>
+        </div>
+
+        <!-- Placed at the end of the document so the pages load faster -->
+        {% block script %}
+            <script src="/static/js/d3.v3.min.js" type="text/javascript"></script>
+            <script src="/static/js/jquery.js"></script>
+            <script src="/static/js/jquery.dataTables.js"></script>
+        {% endblock %}
+    </body>
+</html>
+
+<script>
+    $(document).ready(function() {
+        $(".data-table").dataTable({
+            "oLanguage": {
+                "sEmptyTable":     "No data available in table",
+                "sInfo":           "Showing _START_ to _END_ of _TOTAL_ entries",
+                "sInfoEmpty":      "Showing 0 to 0 of 0 entries",
+                "sInfoFiltered":   "filtered from _MAX_ total entries",
+                "sInfoPostFix":    "",
+                "sInfoThousands":  ",",
+                "sLengthMenu":     "Show _MENU_ entries",
+                "sLoadingRecords": "Loading...",
+                "sProcessing":     "Processing...",
+                "sSearch":         "Search:",
+                "sZeroRecords":    "No matching records found",
+                "oPaginate": {
+                    "sFirst":    "First",
+                    "sLast":     "Last",
+                    "sNext":     "Next",
+                    "sPrevious": "Previous"
+                },
+                "oAria": {
+                    "sSortAscending":  ": activate to sort column ascending",
+                    "sSortDescending": ": activate to sort column descending"
+                }
+            },
+        });
+    });
+</script>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<div class="nav-collapse">
+    <ul class="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/predict">Predict</a></li>
+        <li class="active"><a href="/board">Sniffer Board</a></li>
+        <li><a href="/job">Job</a></li>
+        <li><a href="/about">About</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron row-fluid">
+    <form name="predict-form" class="form" method="POST" action="{{ url_for('predict.analyze') }}">
+        <input type="input" name='crunch_id' class="input-large" placeholder='Input Company'></input>
+        <label>Example: gameloft, cardstar, etc.</label>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}
