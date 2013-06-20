@@ -419,8 +419,8 @@ def store_cb_exits():
             rec = com_dict['acquisition']
             exit = Exit()
             exit.company = com_dict['permalink']
-            exit.acquiring_company = rec['acquiring_company']['permalink']
-            exit.amount = rec['price_amount']
+            exit.acquired_by = rec['acquiring_company']['permalink']
+            exit.valuation = rec['price_amount']
             exit.currency = rec['price_currency_code']
             exit.year = rec['acquired_year']
             exit.month = rec['acquired_month']
@@ -429,7 +429,7 @@ def store_cb_exits():
             rec = com_dict['ipo']
             exit = Exit()
             exit.company = com_dict['permalink']
-            exit.amount = rec['valuation_amount']
+            exit.valuation = rec['valuation_amount']
             exit.currency = rec['valuation_currency_code']
             exit.year = rec['pub_year']
             exit.month = rec['pub_month']
@@ -587,7 +587,6 @@ def store_al_people():
 
 def main():
     Base.metadata.create_all(engine)
-
     '''
     # crunchbase data
     print "Store companies info"
@@ -610,17 +609,17 @@ def main():
 
     print "Store funding rounds"
     store_cb_fundings()
-
+    '''
     print "Store Exits"
     store_cb_exits()
-    
+ 
     '''
-
     # AngelList data
     print "Store angellist company"
     store_al_company()
     print "Store angellist people"
     store_al_people()
+    '''
 
 if __name__ == "__main__":
     main()

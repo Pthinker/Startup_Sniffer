@@ -38,11 +38,9 @@ nosetests.xml
 .DS_Store
 *.swp
 
-
+data/
 old/
 *_json/
-*.csv
-*.model
 
 config.py
 

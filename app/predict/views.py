@@ -21,10 +21,11 @@ def analyze():
 
     #TODO: handle None case
 
-    model = pickle.load(open(os.path.join(APP_STATIC, 'mobile.model')))
-    df = pd.read_csv(os.path.join(APP_STATIC, 'mobile.csv'), header=0, index_col=0)
+    model = pickle.load(open(os.path.join(APP_STATIC, 'rf.model')))
+    df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), header=0, index_col=0)
+
     row = np.array(df.ix[crunch_id])
-    prob = model.predict_proba(row[:-1])
+    prob = model.predict_proba(row)
 
     record = db.session.query(cb_company_info).filter(CBCompanyInfo.crunch_id==crunch_id).first()
     prob = "%.2f%%" % (prob[0][1]*100.0)
