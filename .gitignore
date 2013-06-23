@@ -44,4 +44,4 @@ old/
 *_json/
 
 config.py
-
+*.sql
