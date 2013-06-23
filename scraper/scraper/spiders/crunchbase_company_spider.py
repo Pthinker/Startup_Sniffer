@@ -6,11 +6,16 @@ from scraper.items import CompanyItem
 from datetime import datetime
 import os
 
+import sys
+parentdir = os.path.dirname((os.path.dirname(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__))))))
+sys.path.insert(0, parentdir)
+import util
+import config
 
 class CompanySpider(BaseSpider):
     name = "company"
     allowed_domains = ["crunchbase.com"]
-    api_key = "sn86p65fg2m5cwu6gjtz7dep"
 
     clist = map(chr, range(97, 123))
     clist.append('other')
@@ -25,7 +30,7 @@ class CompanySpider(BaseSpider):
         for url in company_urls:
             crunch_id = url.split("/")[-1].strip()
             api_url = "http://api.crunchbase.com/v/1/company/%s.js?api_key=%s" % \
-                    (crunch_id, self.api_key)
+                    (crunch_id, config.CRUNCHBASE_API_KEY)
             yield Request(api_url, callback=lambda r, crunch_id=crunch_id:self.parse_json(r, crunch_id))
 
     def parse_json(self, response, crunch_id):

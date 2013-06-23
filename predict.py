@@ -72,7 +72,6 @@ def generate_roc():
     
     mean_tpr = 0.0
     mean_fpr = np.linspace(0, 1, 100)
-
     for train_index, test_index in kf:
         model = randomforest(data[train_index], targets[train_index], tree_num=TREE_NUM)
         probas_ = model.predict_proba(data[test_index])
@@ -110,9 +109,9 @@ def main():
     
     #generate_roc()
     
-    #validation()
+    validation()
     
-    build_model()
+    #build_model()
 
 
 if __name__ == "__main__":

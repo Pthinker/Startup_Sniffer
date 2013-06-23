@@ -6,14 +6,16 @@
 #     http://doc.scrapy.org/topics/settings.html
 #
 
-BOT_NAME = 'crunchbase_scraper'
+BOT_NAME = 'scraper'
 
-SPIDER_MODULES = ['crunchbase_scraper.spiders']
-NEWSPIDER_MODULE = 'crunchbase_scraper.spiders'
+SPIDER_MODULES = ['scraper.spiders']
+NEWSPIDER_MODULE = 'scraper.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'crunchbase_scraper (+http://www.yourdomain.com)'
+#USER_AGENT = 'scraper (+http://www.yourdomain.com)'
 
 ITEM_PIPELINES = [
-    #'crunchbase_scraper.pipelines.MysqlStorePipeline',
+    #'scraper.pipelines.MysqlStorePipeline',
 ]
+
+DOWNLOAD_DELAY = 2

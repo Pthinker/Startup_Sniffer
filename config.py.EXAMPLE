@@ -1,0 +1,42 @@
+import os
+
+_basedir = os.path.abspath(os.path.dirname(__file__))
+
+# mysql database
+DATABASE = 'startup_sniffer'
+DB_USER = 'DB_USER'
+DB_PWD = 'DB_PASSWD'
+
+# flask
+DEBUG = True
+
+SECRET_KEY = 'SecretKeyForSessionSigning'
+
+CSRF_ENABLED = True
+CSRF_SESSION_KEY = 'somethingimpossibletoguess'
+
+SQLALCHEMY_DATABASE_URI = 'mysql://{user}:{pwd}@localhost/startup_sniffer?charset=utf8'.format(user=DB_USER, pwd=DB_PWD)
+DATABASE_CONNECT_OPTIONS = {}
+
+# json files folders
+CB_COMPANY_FOLDER = 'scraper/scraper/crunchbase_company_json'
+CB_PEOPLE_FOLDER = 'scraper/scraper/crunchbase_people_json'
+CB_FINANCIAL_FOLDER = 'scraper/scraper/crunchbase_financial_json'
+
+AL_COMPANY_FOLDER = 'scraper/scraper/angellist_company_json'
+AL_PEOPLE_FOLDER = 'scraper/scraper/angellist_people_json'
+
+# API keys
+LINKEDIN_API_KEY = 'Your linkedin api key'
+LINKEDIN_SECRET_KEY = 'Your linked secret key'
+
+TWITTER_CONSUMER_KEY = 'twitter consumer key'
+TWITTER_CONSUMER_SECRET = 'twitter consumer secret'
+TWITTER_ACCESS_TOKEN = 'twitter access token'
+TWITTER_ACCESS_TOKEN_SECRET = 'twitter access token secret'
+
+ANGELLIST_TOKEN = 'angellist token'
+CRUNCHBASE_API_KEY = 'crunchbase api key'
+
+BITLY_ACCESS_TOKEN = 'bitly.com access token'
+

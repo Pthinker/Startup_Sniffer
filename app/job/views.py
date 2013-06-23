@@ -14,7 +14,7 @@ linkedin = oauth.remote_app(
     name = 'linkedin',
     consumer_key = app.config['LINKEDIN_API_KEY'],
     consumer_secret = app.config['LINKEDIN_SECRET_KEY'],
-    request_token_url = 'https://api.linkedin.com/uas/oauth/requestToken',
+    request_token_url = 'https://api.linkedin.com/uas/oauth/requestToken?scope=r_fullprofile',
     access_token_url = 'https://api.linkedin.com/uas/oauth/accessToken',
     authorize_url = 'https://www.linkedin.com/uas/oauth/authenticate')
 
@@ -33,9 +33,11 @@ def recommend():
     if token == None:
         return redirect(url_for('job.login'))
 
-    profile_req_url = 'http://api.linkedin.com/v1/people/~?format=json'
+    profile_req_url = 'http://api.linkedin.com/v1/people/~:' + \
+        '(id,first-name,last-name,industry,interests,skills,educations,' + \
+        'courses,three-current-positions)?format=json'
     resp = linkedin.get(profile_req_url)
-
+    
     if resp.status == 200:
         profile = resp.data
 

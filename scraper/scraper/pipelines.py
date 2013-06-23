@@ -7,17 +7,15 @@ from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-
+'''
+Depreciated
+'''
 class MysqlStorePipeline(object):
     def __init__(self):
         self.engine = create_engine('mysql://admin:admin@localhost/crunchbase?charset=utf8')
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
     
-    '''
-    Depreciated
-    '''
-    '''
     def process_item(self, item, spider):
         if isinstance(item, CompanyItem):
             com = Company()
@@ -34,5 +32,4 @@ class MysqlStorePipeline(object):
 
             self.session.add(com)
             self.session.commit()
-    '''
 
