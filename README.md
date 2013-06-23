@@ -9,8 +9,9 @@ Setup on Amazon EC2 Ubuntu instance:
 ==================================================================
 
 # Python
-wget https://pypi.python.org/packages/source/s/setuptools/setuptools-0.7.4.tar.gz
-tar xzf setuptools-0.7.4.tar.gz
+wget https://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c11.tar.gz (installing setuptools 0.7 version
+seems having problem to install Mysql-python for me)
+tar xzf setuptools-0.6c11.tar.gz
 sudo python setup.py install
 
 wget https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz
@@ -46,6 +47,9 @@ sudo apt-get install python-flask
 
 # Mysql
 sudo apt-get install mysql-server
+sudo apt-get install libmysqlclient-dev
+
+sudo pip install MySQL-python
 
 login to mysql, create a new account(change USER and PASSWD):
 GRANT ALL ON *.* TO USER@localhost IDENTIFIED BY 'PASSWD';
