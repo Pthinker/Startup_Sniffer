@@ -17,7 +17,7 @@
     <div class="ac">
         <form id="predict-form" method="post" action="{{ url_for('predict.analyze') }}">
             <h1>Startup Outcome Prediction</h1>
-            <p>Input company, for example: kaggle, decide-com, etc.</p>
+            <p>Input company, for example: kaggle, hulu, decide-com, etc.</p>
             <input type="text" autocomplete="off" autocomplete="off" placeholder="Type Company ..." id="crunch-id" 
                 name="crunch-id" data-provide="typeahead" data-items="4" data-source='{{comp_json}}'>
             <a type="" class="search_button btn btn-success" onclick="formSubmit()">
