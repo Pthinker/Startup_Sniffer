@@ -16,9 +16,9 @@
 <div class="hero-unit faq">
     <div class="ac">
         <form id="predict-form" method="post" action="{{ url_for('predict.analyze') }}">
-            <h1>Startup Outcome Prediction</h1>
-            <p>Input company, for example: kaggle, hulu, decide-com, etc.</p>
-            <input type="text" autocomplete="off" autocomplete="off" placeholder="Type Company ..." id="crunch-id" 
+            <h2>Startup Outcome Prediction</h2>
+            <p>Input company, for example: kaggle, hulu, decide-com, fitful, etc.</p>
+            <input type="text" autocomplete="off" placeholder="Type Company ..." id="crunch-id" 
                 name="crunch-id" data-provide="typeahead" data-items="4" data-source='{{comp_json}}'>
             <a type="" class="search_button btn btn-success" onclick="formSubmit()">
                 <i class="icon-search icon-white"></i>
@@ -37,7 +37,7 @@
         </p>
         <p>URL: <a href="{{ company.url }}">{{ company.url }}</a></p>
         <p>{{ company.desc }}</p>
-        <p><img src="http://www.crunchbase.com/{{ company.img }}"/><p>
+        <p><img src="http://www.crunchbase.com/{{ company.img }}" height="50" width="100" /><p>
         {% if company.tags %}
             <ul>
             {% for tag in company.tags.split(",") %}
@@ -49,9 +49,12 @@
 </div>
 
 <div class="span6">
-    <h2>Probability of IPO/Acquired: {{ prob }}</h2>
+    <h2>Probability of IPO/Acquired: {{prob}}</h2>
     <div class="span5 progress progress-success active">
         <div class="bar" style="width: {{prob}};"></div>
+    </div>
+    <div class="span5">
+        <h3>Total money raised: ${{ com_record.total_money_raised }}</h3>
     </div>
 </div>
 

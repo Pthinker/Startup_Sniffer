@@ -28,12 +28,12 @@ class TwitterError(Exception):
         return self.args[0]
 
 def throttle_hook(response):
-    ratelimited = "x-ratelimit-remaining" in response.headers and \
-                  "x-ratelimit-reset" in response.headers 
+    ratelimited = "x-rate-limit-remaining" in response.headers and \
+                  "x-rate-limit-reset" in response.headers 
     if ratelimited:
-        remaining = int(response.headers["x-ratelimit-remaining"])
+        remaining = int(response.headers["x-rate-limit-remaining"])
         reset = datetime.datetime.utcfromtimestamp(float(
-            response.headers["x-ratelimit-reset"]))
+            response.headers["x-rate-limit-reset"]))
         now = datetime.datetime.utcnow()
         
         time_to_reset = reset - now
@@ -69,6 +69,24 @@ def search_tweets(query=None, count=10, lang='en', result_type='recent'):
 
     return data['statuses']
 
+def twitter_user_show(user):
+    client = requests.session(
+            hooks={'pre_request': twitter_oauth_hook, 'response': throttle_hook})
+
+    request_url = "https://api.twitter.com/1.1/users/show.json?screen_name=%s" % user
+    resp = client.get(request_url)
+    json_content = resp.content
+    try:
+        data = json.loads(json_content)
+        check_twitter_error(data)
+    except ValueError:
+        if "<title>Twitter / Over capacity</title>" in json_content:
+            raise TwitterError("Capacity Error")
+        if "<title>Twitter / Error</title>" in json_content:
+            raise TwitterError("Technical Error")
+        raise TwitterError("json decoding")
+    return data
+
 def get_bitly_hash(url):
     """Get shorted bitly link from a normal url
     """
@@ -91,9 +109,19 @@ def get_bitly_hash(url):
         print "Cannot get bitly hash for %s" % url
         return None
 
+def bitly_click_count(bitly_hash):
+    """Get bitly url click count
+    """
+    data = bitly.clicks(hash=bitly_hash)
+    return data[0]['global_clicks']
+
 def main():
     #search_tweets("iphone")
-    get_bitly_hash('http://google.com')
+    #twitter_user_show("zignallabs")
+    
+    #get_bitly_hash('http://google.com')
+    bitly_click_count('188PuMH')
+    
 
 if __name__ == "__main__":
     main()

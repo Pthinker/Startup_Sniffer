@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Table, MetaData, ForeignKey
-from sqlalchemy import Integer, String, Text, Numeric, Boolean, Float, DateTime
+from sqlalchemy import Integer, String, Text, Numeric, Boolean, Float, DateTime, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import simplejson as json
@@ -9,7 +9,7 @@ from datetime import datetime
 
 import config
 
-engine = create_engine('mysql://admin:admin@localhost/startup_sniffer?charset=utf8', echo=False)
+engine = create_engine(config.SQLALCHEMY_DATABASE_URI, echo=False)
 Base = declarative_base()
 
 class Company(Base):
@@ -31,6 +31,107 @@ class Company(Base):
     competitor_num = Column(Integer)
     office_num = Column(Integer)
     product_num = Column(Integer)
+    service_num = Column(Integer) # number of service providers
+
+    founding_round_num = Column(Integer)
+    total_money_raised = Column(Numeric)
+    acquisition_num = Column(Integer) # number of companies it acquired
+    investment_num = Column(Integer) # number of investments it made
+    vc_num = Column(Integer) # number of VC and provate equitity firms investing
+
+    success = Column(Boolean)
+
+class CompanyInfo(Base):
+    __tablename__ = 'cb_company_info'
+
+    id = Column(Integer, primary_key=True)
+    crunch_id = Column(String(200), nullable=False, index=True, unique=True)
+    name = Column(String(250), nullable=False)
+    url = Column(String(250))
+    twitter = Column(String(30))
+    img = Column(String(200))
+    category = Column(String(30))
+    tags = Column(String(200))
+    desc = Column(String(100))
+    overview = Column(Text)
+
+class People(Base):
+    __tablename__ = 'cb_people'
+    
+    id = Column(Integer, primary_key=True)
+    crunch_id = Column(String(200), nullable=False, index=True, unique=True)
+    first_name = Column(String(50))
+    last_name = Column(String(150))
+    twitter = Column(String(50))
+    tags = Column(String(300))
+    overview = Column(Text)
+
+class CompanyPeople(Base):
+    __tablename__ = 'cb_company_people'
+        
+    id = Column(Integer, primary_key=True)
+    company = Column(String(200), ForeignKey("cb_companies.crunch_id", ondelete='CASCADE'))
+    organization = Column(String(200), ForeignKey("cb_financial_organizations.crunch_id", ondelete='CASCADE'))
+    people = Column(String(200), ForeignKey("cb_people.crunch_id", ondelete='CASCADE'), nullable=False)
+    is_past = Column(Boolean)
+    title = Column(String(150))
+
+class CompanyCompetitor(Base):
+    __tablename__ = 'cb_competitors'
+        
+    id = Column(Integer, primary_key=True)
+    company = Column(String(200), ForeignKey("cb_companies.crunch_id", ondelete='CASCADE'), nullable=False)
+    competitor = Column(String(200), ForeignKey("cb_companies.crunch_id", ondelete='CASCADE'), nullable=False)
+
+class FinancialOrg(Base):
+    __tablename__ = 'cb_financial_organizations'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(200), nullable=False)
+    crunch_id = Column(String(200), nullable=False, index=True, unique=True)
+    url = Column(String(200))
+    twitter = Column(String(30))
+    desc = Column(String(250))
+    employee_num = Column(Integer)
+    founded_year = Column(Integer)
+    founded_month = Column(Integer)
+    tags = Column(String(300))
+    overview = Column(Text)
+
+class Exit(Base):
+    __tablename__ = 'cb_exits'
+    
+    id = Column(Integer, primary_key=True)
+    company = Column(String(200), ForeignKey("cb_companies.crunch_id", ondelete='CASCADE'))
+    acquired_by = Column(String(200))
+    valuation = Column(Float)
+    currency = Column(String(10))
+    year = Column(Integer)
+    month = Column(Integer)
+
+class Funding(Base):
+    __tablename__ = 'cb_fundings'
+    
+    id = Column(Integer, primary_key=True)
+    company = Column(String(200), ForeignKey("cb_companies.crunch_id", 
+        ondelete='CASCADE'), nullable=False) #company receiving the funding
+    round_code = Column(String(20))
+    amount = Column(Numeric)
+    currency = Column(String(10))
+    year = Column(Integer)
+    month = Column(Integer)
+
+class FundingMember(Base):
+    __tablename__ = 'cb_funding_members'
+    id = Column(Integer, primary_key=True)
+    funding = Column(Integer, ForeignKey("cb_fundings.id", ondelete='CASCADE'), 
+            nullable=False)
+    company = Column(String(200), ForeignKey("cb_companies.crunch_id", 
+        ondelete='CASCADE'))
+    financial = Column(String(200), ForeignKey("cb_people.crunch_id", 
+        ondelete='CASCADE'))
+    people = Column(String(200), ForeignKey("cb_financial_organizations.crunch_id", 
+        ondelete='CASCADE'))
 
 class AngellistCompany(Base):
     __tablename__ = 'al_companies'
@@ -52,6 +153,17 @@ class AngellistCompany(Base):
     company_type = Column(String(100))
     locations = Column(String(100))
     bitly_hash = Column(String(20))
+
+class StartupInfo(Base):
+    __tablename__ = 'startup_info'
+    
+    id = Column(Integer, primary_key=True)
+    al_id = Column(Integer)
+    info_date = Column(Date)
+    al_follower = Column(Integer)
+    al_quality = Column(Integer)
+    bitly_click = Column(Integer)
+    twitter_follower = Column(Integer)
 
 class AngellistPeople(Base):
     __tablename__ = 'al_people'
@@ -499,11 +611,6 @@ def store_al_people():
     session.commit()
     session.close()
 
-def store_track_startups(session):
-    locations = ['san francisco', 'new york, ny', 'los angeles', 'sunnyvale', \
-            'palo alto', 'mountain view', 'san diego', 'santa monica', \
-            'san jose', 'silicon valley', 'richmond']
-
 def main():
     Base.metadata.create_all(engine)
     '''
@@ -534,14 +641,11 @@ def main():
     
     print "Store angellist people..."
     store_al_people()
-    '''
+    
     # AngelList data
     print "Store angellist company..."
     store_al_company()
-
-    # track startup related data
-    # print "Store startup track data..."
-
+    '''
 if __name__ == "__main__":
     main()
 

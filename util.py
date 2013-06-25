@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, MetaData, Table
+from sqlalchemy import create_engine, MetaData, Table, func
 from sqlalchemy.orm import mapper, sessionmaker
 
 import os
@@ -6,6 +6,8 @@ import json
 import re
 import time
 import random
+import urllib2
+from datetime import datetime
 
 import config
 import socialmedia
@@ -40,6 +42,8 @@ class ALCompany(object):
 class ALPeople(object):
     pass
 
+class StartupInfo(object):
+    pass
 
 def load_session():
     """Connectiong to exisitng database and return session
@@ -61,6 +65,9 @@ def load_session():
 
     al_companies = Table('al_companies', metadata, autoload=True)
     mapper(ALCompany, al_companies)
+
+    startup_info = Table('startup_info', metadata, autoload=True)
+    mapper(StartupInfo, startup_info)
 
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -253,6 +260,43 @@ def get_new_startups(session):
         else:
             print al_startup.name
 
+def update_startup_info(session):
+    """ Insert startup tracking information for each startup for today into db
+    """
+    startups = session.query(CBCompany, ALCompany).filter(
+            CBCompany.name==ALCompany.name).filter(
+            CBCompany.twitter is not None).filter(
+            func.char_length(CBCompany.twitter)>0).all()
+    
+    for startup in startups:
+        al_id = startup.ALCompany.angellist_id
+        print al_id
+        
+        count = session.query(StartupInfo).filter(StartupInfo.al_id==al_id).filter(
+                    StartupInfo.info_date==datetime.today().date()).count()
+        if count > 0:
+            continue
+        else:
+            record = StartupInfo()
+        
+        resp = urllib2.urlopen(
+                "https://api.angel.co/1/startups/%d?access_token=%s" % 
+                (al_id, config.ANGELLIST_TOKEN))
+        profile = json.loads(resp.read())
+        
+        record.info_date = datetime.today().date()
+        record.al_id = al_id
+        record.al_follower = profile['follower_count']
+        record.al_quality = profile['quality']
+        
+        twitter_profile = socialmedia.twitter_user_show(startup.CBCompany.twitter)
+        record.twitter_follower = twitter_profile['followers_count']
+        
+        record.bitly_click = socialmedia.bitly_click_count(startup.ALCompany.bitly_hash)
+        
+        session.add(record)
+        session.commit()
+
 def update_bity_hash(session):
     """ Save bitly.com url hash for each startup company
     """
@@ -276,13 +320,16 @@ def main():
     session = load_session()
     
     #generate_training_data(session)
+    
     #generate_testing_data(session)
     
     #get_new_startups(session)
     
     #get_startup_ids(session)
 
-    update_bity_hash(session)
+    #update_bity_hash(session)
+
+    update_startup_info(session)
 
     session.close()
 

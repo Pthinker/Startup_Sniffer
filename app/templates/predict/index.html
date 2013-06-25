@@ -13,12 +13,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="hero-unit faq">
+<div class="hero-unit faq" style='margin-top:10px'>
     <div class="ac">
         <form id="predict-form" method="post" action="{{ url_for('predict.analyze') }}">
-            <h1>Startup Outcome Prediction</h1>
-            <p>Input company, for example: kaggle, hulu, decide-com, etc.</p>
-            <input type="text" autocomplete="off" autocomplete="off" placeholder="Type Company ..." id="crunch-id" name="crunch-id"
+            <h2>Startup Outcome Prediction</h2>
+            <p>Input company, for example: kaggle, hulu, decide-com, fitful etc.</p>
+            <input type="text" autocomplete="off" placeholder="Type Company ..." id="crunch-id" name="crunch-id"
                 data-provide="typeahead" data-items="4"
                 data-source='{{comp_json}}'>
             <a type="" class="search_button btn btn-success" onclick="formSubmit()">
