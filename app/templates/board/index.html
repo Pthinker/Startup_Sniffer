@@ -5,7 +5,7 @@
     <ul class="nav">
         <li><a href="/">Home</a></li>
         <li><a href="/predict">Predict</a></li>
-        <li class="active"><a href="/board">Sniffer Board</a></li>
+        <li><a href="/board" class="active">Sniffer Board</a></li>
         <li><a href="/job">Job</a></li>
         <li><a href="/about">About</a></li>
     </ul>
@@ -13,11 +13,29 @@
 {% endblock %}
 
 {% block content %}
-<div class="jumbotron row-fluid">
-    <form name="predict-form" class="form" method="POST" action="{{ url_for('predict.analyze') }}">
-        <input type="input" name='crunch_id' class="input-large" placeholder='Input Company'></input>
-        <label>Example: gameloft, cardstar, etc.</label>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<div class="hero-unit faq" style='margin-top:10px'>
+    <div class="ac">
+            <h2>Startup Leaderboard</h2>
+    </div>
+
+    <div class="well">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Startup</th>
+                    <th>Startup</th>
+                    <th>Startup</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                    <tr>
+                        <td>{{ record.ALCompany.name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
 {% endblock %}

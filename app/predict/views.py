@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-from app import db, cb_companies, cb_company_info, APP_STATIC
+from app import db, cb_companies, al_companies, cb_company_info, startup_info, APP_STATIC
 from app.models import *
 import pickle
 import os
@@ -12,14 +12,13 @@ predict_page = Blueprint('predict', __name__, url_prefix='/predict')
 @predict_page.route('/')
 @predict_page.route('/index')
 def index():
-    #records = db.session.query(cb_company_info).filter(
-    #        CBCompanyInfo.img != None).filter(
-    #         CBCompanyInfo.url != None).limit(10)
+    records = db.session.query(al_companies).filter(
+            ALCompany.logo_url != None).limit(22)
     
     df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), 
             header=0, index_col=0)
     comp_json = json.dumps([cid for cid in df.index.values])
-    return render_template("predict/index.html", comp_json=comp_json)
+    return render_template("predict/index.html", comp_json=comp_json, records=records)
 
 @predict_page.route('/analyze/', methods=['POST'])
 def analyze():

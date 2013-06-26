@@ -24,8 +24,17 @@
             <a type="" class="search_button btn btn-success" onclick="formSubmit()">
                 <i class="icon-search icon-white"></i>
             </a>
-            <!--<input type="submit" class="search_button btn btn-success" /> -->
         </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="span20">
+        <div>
+            {% for record in records %}
+            <a href="#"><img src="{{record.logo_url}}" width="80" height="80"></a>
+            {% endfor %}
+        </div>
     </div>
 </div>
 

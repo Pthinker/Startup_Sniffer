@@ -28,3 +28,6 @@ class ALCompany(object):
 class ALPeople(object):
     pass
 
+class StartupInfo(object):
+    pass
+

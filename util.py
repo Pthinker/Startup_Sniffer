@@ -12,6 +12,9 @@ from datetime import datetime
 import config
 import socialmedia
 
+categories = ['mobile', 'web', 'advertising', 'ecommerce', 'games_video', \
+            'software', 'search']
+
 class CBCompany(object):
     pass
 
@@ -53,6 +56,9 @@ def load_session():
 
     cb_companies = Table('cb_companies', metadata, autoload=True)
     mapper(CBCompany, cb_companies)
+    
+    cb_company_info = Table('cb_company_info', metadata, autoload=True)
+    mapper(CBCompanyInfo, cb_company_info)
     
     cb_exits = Table('cb_exits', metadata, autoload=True)
     mapper(CBExit, cb_exits)
@@ -150,8 +156,6 @@ def founded_company_exit_count(crunch_id, session):
 
 def generate_training_data(session):
     # Get companies in categoeis that interested
-    categories = ['mobile', 'web', 'advertising', 'ecommerce', 'games_video', \
-            'software', 'search']
     companies = session.query(CBCompany).filter(
             CBCompany.category.in_(categories)).all()
     
@@ -197,8 +201,6 @@ def generate_training_data(session):
 
 def generate_testing_data(session):
     # Get companies in categoeis that interested
-    categories = ['mobile', 'web', 'advertising', 'ecommerce', 'games_video', \
-            'software', 'search', 'other']
     companies = session.query(CBCompany).filter(
             CBCompany.category.in_(categories)).filter(
             CBCompany.founded_year>=2007).all()
@@ -243,9 +245,6 @@ def get_startup_ids(session):
     return ids
 
 def get_new_startups(session):
-    categories = ['mobile', 'web', 'advertising', 'ecommerce', 'games_video', \
-            'software', 'search', 'other']
-    
     cb_startups = session.query(CBCompany).filter(
             CBCompany.category.in_(categories)).filter(
             CBCompany.founded_year>2012).all()
@@ -316,6 +315,26 @@ def update_bity_hash(session):
 
     session.commit()
 
+def rank_startup(session):
+    records = session.query(StartupInfo).filter(
+            StartupInfo.info_date==datetime.today().date()).all()
+    print len(records)
+
+def cleanup(session):
+    companies = session.query(CBCompany).filter(
+            CBCompany.category.in_(categories)).filter(CBCompany.tags is not None).all()
+    for com in companies:
+        if com.tags is not None:
+            continue
+        info = session.query(CBCompanyInfo).filter(CBCompanyInfo.crunch_id==com.crunch_id).first()
+        com.img = info.img
+        com.tags = info.tags
+        com.desc = info.desc
+        com.overview = info.overview
+        
+        session.add(com)
+        session.commit()
+
 def main():
     session = load_session()
     
@@ -329,7 +348,11 @@ def main():
 
     #update_bity_hash(session)
 
-    update_startup_info(session)
+    #update_startup_info(session)
+
+    #rank_startup(session)
+
+    cleanup(session)
 
     session.close()
 

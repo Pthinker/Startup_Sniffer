@@ -41,6 +41,12 @@ class Company(Base):
 
     success = Column(Boolean)
 
+    img = Column(String(200))
+    tags = Column(String(200))
+    desc = Column(String(100))
+    overview = Column(Text)
+
+'''Depreciated
 class CompanyInfo(Base):
     __tablename__ = 'cb_company_info'
 
@@ -54,6 +60,7 @@ class CompanyInfo(Base):
     tags = Column(String(200))
     desc = Column(String(100))
     overview = Column(Text)
+'''
 
 class People(Base):
     __tablename__ = 'cb_people'
@@ -205,6 +212,12 @@ def store_cb_companies():
         com.dead_year = com_dict['deadpooled_year']
         com.dead_month = com_dict['deadpooled_month']
             
+        com.desc = com_dict['description']
+        com.overview = com_dict['overview']
+        com.tags = com_dict['tag_list']
+        if com_dict['image'] is not None and len(com_dict['image']['available_sizes'])>0:
+            com.img = com_dict['image']['available_sizes'][-1][1]
+        
         money = com_dict['total_money_raised']
         matobj = re.search(r"([\d\.]+)", money)
         if matobj:
@@ -241,6 +254,7 @@ def store_cb_companies():
     session.commit()
     session.close()
 
+''' Depreciated
 def store_cb_company_info():
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -266,6 +280,7 @@ def store_cb_company_info():
         session.add(com)
     session.commit()
     session.close()
+'''
 
 def store_cb_people():
     Session = sessionmaker(bind=engine)
