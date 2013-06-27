@@ -13,6 +13,8 @@ engine = create_engine(config.SQLALCHEMY_DATABASE_URI, echo=False)
 Base = declarative_base()
 
 class Company(Base):
+    """ Model class for crunchbase company
+    """
     __tablename__ = 'cb_companies'
     
     id = Column(Integer, primary_key=True)
@@ -63,6 +65,8 @@ class CompanyInfo(Base):
 '''
 
 class People(Base):
+    """ Model class for crunchbase people
+    """
     __tablename__ = 'cb_people'
     
     id = Column(Integer, primary_key=True)
@@ -74,6 +78,8 @@ class People(Base):
     overview = Column(Text)
 
 class CompanyPeople(Base):
+    """ Model class for crunchbase company people relation
+    """
     __tablename__ = 'cb_company_people'
         
     id = Column(Integer, primary_key=True)
@@ -84,6 +90,8 @@ class CompanyPeople(Base):
     title = Column(String(150))
 
 class CompanyCompetitor(Base):
+    """ Model class for crunchbase company competitor
+    """
     __tablename__ = 'cb_competitors'
         
     id = Column(Integer, primary_key=True)
@@ -91,6 +99,8 @@ class CompanyCompetitor(Base):
     competitor = Column(String(200), ForeignKey("cb_companies.crunch_id", ondelete='CASCADE'), nullable=False)
 
 class FinancialOrg(Base):
+    """ Model class for crunchbase financial organization
+    """
     __tablename__ = 'cb_financial_organizations'
     
     id = Column(Integer, primary_key=True)
@@ -106,6 +116,8 @@ class FinancialOrg(Base):
     overview = Column(Text)
 
 class Exit(Base):
+    """ Model class for crunchbase company exit
+    """
     __tablename__ = 'cb_exits'
     
     id = Column(Integer, primary_key=True)
@@ -117,6 +129,8 @@ class Exit(Base):
     month = Column(Integer)
 
 class Funding(Base):
+    """ Model class for crunchbase company funding
+    """
     __tablename__ = 'cb_fundings'
     
     id = Column(Integer, primary_key=True)
@@ -129,7 +143,10 @@ class Funding(Base):
     month = Column(Integer)
 
 class FundingMember(Base):
+    """ Model class for crunchbase funding organization
+    """
     __tablename__ = 'cb_funding_members'
+
     id = Column(Integer, primary_key=True)
     funding = Column(Integer, ForeignKey("cb_fundings.id", ondelete='CASCADE'), 
             nullable=False)
@@ -141,6 +158,8 @@ class FundingMember(Base):
         ondelete='CASCADE'))
 
 class AngellistCompany(Base):
+    """ Model class for angellist company
+    """
     __tablename__ = 'al_companies'
     
     id = Column(Integer, primary_key=True)
@@ -162,6 +181,8 @@ class AngellistCompany(Base):
     bitly_hash = Column(String(20))
 
 class StartupInfo(Base):
+    """ Model class for tracking startup
+    """
     __tablename__ = 'startup_info'
     
     id = Column(Integer, primary_key=True)
@@ -173,6 +194,8 @@ class StartupInfo(Base):
     twitter_follower = Column(Integer)
 
 class AngellistPeople(Base):
+    """ Model class for angellist people
+    """
     __tablename__ = 'al_people'
     
     id = Column(Integer, primary_key=True)
@@ -190,6 +213,8 @@ class AngellistPeople(Base):
     locations = Column(String(100))
 
 def store_cb_companies():
+    """ Parse crunchbase company json files and save into database
+    """
     Session = sessionmaker(bind=engine)
     session = Session()
     
@@ -283,6 +308,8 @@ def store_cb_company_info():
 '''
 
 def store_cb_people():
+    """ Parse crunchbase people json files and save into database
+    """
     Session = sessionmaker(bind=engine)
     session = Session()
     
@@ -303,6 +330,8 @@ def store_cb_people():
     session.close()
 
 def store_cb_financial_organizations():
+    """ Parse crunchbase financial organization json files and save into database
+    """
     Session = sessionmaker(bind=engine)
     session = Session()
     
@@ -329,6 +358,9 @@ def store_cb_financial_organizations():
     session.close()
 
 def store_cb_companypeople():
+    """ Parse crunchbase company json files and save company people relations 
+        into database
+    """
     Session = sessionmaker(bind=engine)
     session = Session()
     
@@ -382,6 +414,8 @@ def store_cb_companypeople():
     session.close()
 
 def store_cb_competitors():
+    """ Parse crunchbase company json files and save competitors into database
+    """
     Session = sessionmaker(bind=engine)
     session = Session()
     
@@ -402,6 +436,8 @@ def store_cb_competitors():
     session.close()
 
 def store_cb_fundings():
+    """ Parse crunchbase company json files and save funding info into database
+    """
     Session = sessionmaker(bind=engine)
     session = Session()
     
@@ -440,6 +476,8 @@ def store_cb_fundings():
     session.commit()
 
 def store_cb_exits():
+    """ Parse crunchbase company json files and save exit info into database
+    """
     Session = sessionmaker(bind=engine)
     session = Session()
     
@@ -472,61 +510,9 @@ def store_cb_exits():
     session.commit()
     session.close()
 
-def store_cb_ipo():
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    
-    company_folder = "%s/company_json" % json_folder
-    company_files = os.listdir(company_folder)
-    for fname in company_files:
-        fpath = os.path.join(company_folder, fname)
-        with open(fpath) as fh:
-            com_dict = json.load(fh, strict=False)
-        if com_dict['ipo'] is not None:
-            ipo = IPO()
-            rec = com_dict['ipo']
-            ipo.company = com_dict['permalink']
-            ipo.valuation = rec['valuation_amount']
-            ipo.year = rec['pub_year']
-            ipo.month = rec['pub_month']
-            ipo.day = rec['pub_day']
-            session.add(ipo)
-    session.commit()
-    session.close()
-
-def store_cb_acquisition():
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    
-    cdict = {}
-    for com in session.query(Company):
-        cdict[com.crunch_id] = 1
-
-    company_folder = "%s/company_json" % json_folder
-    company_files = os.listdir(company_folder)
-    for fname in company_files:
-        fpath = os.path.join(company_folder, fname)
-        with open(fpath) as fh:
-            com_dict = json.load(fh, strict=False)
-        if com_dict['acquisition'] is not None:
-            rec = com_dict['acquisition']
-            if not rec['acquiring_company']['permalink'] in cdict:
-                continue
-            acq = Acquisition()
-            acq.company = com_dict['permalink']
-            acq.acquiring_company = rec['acquiring_company']['permalink']
-            acq.amount = rec['price_amount']
-            acq.currency = rec['price_currency_code']
-            acq.year = rec['acquired_year']
-            acq.month = rec['acquired_month']
-            acq.day = rec['acquired_day']
-            
-            session.add(acq)
-
-    session.commit()
-    session.close()
-
 def store_al_company():
+    """ Parse angellist company json files and save into database
+    """
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -587,6 +573,8 @@ def store_al_company():
     session.close()
 
 def store_al_people():
+    """ Parse angellist people json files and save into database
+    """
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -658,6 +646,7 @@ def main():
     print "Store angellist company..."
     store_al_company()
     '''
+
 if __name__ == "__main__":
     main()
 

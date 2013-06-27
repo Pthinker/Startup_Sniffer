@@ -28,6 +28,8 @@ class TwitterError(Exception):
         return self.args[0]
 
 def throttle_hook(response):
+    """ Throttle for twitter API
+    """
     ratelimited = "x-rate-limit-remaining" in response.headers and \
                   "x-rate-limit-reset" in response.headers 
     if ratelimited:
@@ -50,6 +52,8 @@ def check_twitter_error(data):
         raise TwitterError(data['errors'])
 
 def search_tweets(query=None, count=10, lang='en', result_type='recent'):
+    """ Search tweets according to query using twitter API
+    """
     client = requests.session(
             hooks={'pre_request': twitter_oauth_hook, 'response': throttle_hook})
 
@@ -70,6 +74,8 @@ def search_tweets(query=None, count=10, lang='en', result_type='recent'):
     return data['statuses']
 
 def twitter_user_show(user):
+    """ Get user info using twitter API
+    """
     client = requests.session(
             hooks={'pre_request': twitter_oauth_hook, 'response': throttle_hook})
 
@@ -109,20 +115,12 @@ def get_bitly_hash(url):
         print "Cannot get bitly hash for %s" % url
         return None
 
-def bitly_click_count(bitly_hash):
-    """Get bitly url click count
-    """
-    data = bitly.clicks(hash=bitly_hash)
-    return data[0]['global_clicks']
-
 def main():
     #search_tweets("iphone")
     #twitter_user_show("zignallabs")
     
     #get_bitly_hash('http://google.com')
-    bitly_click_count('188PuMH')
     
-
 if __name__ == "__main__":
     main()
 

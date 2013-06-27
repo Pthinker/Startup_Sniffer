@@ -1,3 +1,7 @@
+"""
+Model class for database tabels
+"""
+
 class CBCompany(object):
     pass
 

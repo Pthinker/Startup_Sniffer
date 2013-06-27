@@ -80,14 +80,6 @@ def load_session():
 def exited_competitors_count(crunch_id, session):
     """Return the number of successful competitors of crunch_id
     """
-    if crunch_id is None:
-        print "crunch_id is None"
-        return None
-
-    if session is None:
-        print "DB session is None"
-        return None
-    
     return session.query(CBCompetitor, CBExit).filter(
             CBCompetitor.company==crunch_id).filter(
             CBCompetitor.competitor==CBExit.company).count()
@@ -95,14 +87,6 @@ def exited_competitors_count(crunch_id, session):
 def founded_company_count(crunch_id, session):
     """Return the number of companies founder created
     """
-    if crunch_id is None:
-        print "crunch_id is None"
-        return None
-
-    if session is None:
-        print "DB session is None"
-        return None
-
     count = 0
     records = session.query(CBCompanyPeople).filter(
             CBCompanyPeople.company==crunch_id).all()
@@ -125,17 +109,10 @@ def founded_company_count(crunch_id, session):
 def founded_company_exit_count(crunch_id, session):
     """Return the number of exited companies founder created
     """
-    if crunch_id is None:
-        print "crunch_id is None"
-        return None
-
-    if session is None:
-        print "DB session is None"
-        return None
-
     count = 0
     records = session.query(CBCompanyPeople).filter(
             CBCompanyPeople.company==crunch_id).all()
+    
     for record in records:
         title = record.title
         if ("Founder" in title) or ("founder" in title) or ("owner" in title) or \
@@ -153,7 +130,8 @@ def founded_company_exit_count(crunch_id, session):
     return count
 
 def generate_training_data(session):
-    # Get companies in categoeis that interested
+    """ Get training companies data in categoeis
+    """
     companies = session.query(CBCompany).filter(
             CBCompany.category.in_(categories)).all()
     
@@ -198,7 +176,8 @@ def generate_training_data(session):
     fh.close()
 
 def generate_testing_data(session):
-    # Get companies in categoeis that interested
+    """ Get testing companies data in categoeis
+    """
     companies = session.query(CBCompany).filter(
             CBCompany.category.in_(categories)).filter(
             CBCompany.founded_year>=2007).all()
@@ -235,30 +214,8 @@ def generate_testing_data(session):
                    company_count, exited_company_count))
     fh.close()
 
-def get_startup_ids(session):
-    al_startups = session.query(ALCompany).all()
-    ids = []
-    for startup in al_startups:
-        ids.append(startup.angellist_id)
-    return ids
-
-def get_new_startups(session):
-    cb_startups = session.query(CBCompany).filter(
-            CBCompany.category.in_(categories)).filter(
-            CBCompany.founded_year>2012).all()
-
-    al_startups = session.query(ALCompany).filter(
-            ALCompany.company_type=='Startup').all()
-
-    for al_startup in al_startups:
-        if session.query(CBCompany).filter(
-                CBCompany.name==al_startup.name).count() > 0:
-            pass
-        else:
-            print al_startup.name
-
 def update_startup_info(session):
-    """ Insert startup tracking information for each startup for today into db
+    """ Insert tracking information for each startup for today into database
     """
     startups = session.query(CBCompany, ALCompany).filter(
             CBCompany.name==ALCompany.name).filter(
@@ -314,11 +271,6 @@ def update_bity_hash(session):
 
     session.commit()
 
-def rank_startup(session):
-    records = session.query(StartupInfo).filter(
-            StartupInfo.info_date==datetime.today().date()).all()
-    print len(records)
-
 def main():
     session = load_session()
     
@@ -326,16 +278,6 @@ def main():
     
     #generate_testing_data(session)
     
-    #get_new_startups(session)
-    
-    #get_startup_ids(session)
-
-    #update_bity_hash(session)
-
-    update_startup_info(session)
-
-    #rank_startup(session)
-
     session.close()
 
 if __name__ == "__main__":
