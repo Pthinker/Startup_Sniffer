@@ -5,8 +5,8 @@
     <ul class="nav">
         <li><a href="/">Home</a></li>
         <li><a href="/predict">Predict</a></li>
-        <li><a href="/board" class="active">Sniffer Board</a></li>
-        <li><a href="/job">Job</a></li>
+        <li class="active"><a href="/board">Sniffer Board</a></li>
+        <!--<li><a href="/job">Job</a></li>-->
         <li><a href="/about">About</a></li>
     </ul>
 </div>
@@ -15,27 +15,35 @@
 {% block content %}
 <div class="hero-unit faq" style='margin-top:10px'>
     <div class="ac">
-            <h2>Startup Leaderboard</h2>
+            <h2>Fame Leaderboard</h2>
     </div>
 
     <div class="well">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Startup</th>
-                    <th>Startup</th>
-                    <th>Startup</th>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Angellist Quality</th>
+                    <th>Angellist Follower</th>
+                    <th>Twitter Follower</th>
+                    <th>Bitly Click</th>
                 </tr>
             </thead>
             <tbody>
-                {% for record in records %}
+                {% for record in ranked_list %}
                     <tr>
-                        <td>{{ record.ALCompany.name }}</td>
+                        <td><img src="{{ record[1]['data'][5]}}" width="45" height="45" /></td>
+                        <td>{{ record[1]['data'][0] }}</td>
+                        <td>{{ record[1]['data'][1] }}</td>
+                        <td>{{ record[1]['data'][2] }}</td>
+                        <td>{{ record[1]['data'][3] }}</td>
+                        <td>{{ record[1]['data'][4] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
 </div>
 {% endblock %}
+

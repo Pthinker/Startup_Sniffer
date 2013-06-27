@@ -13,8 +13,6 @@ cb_companies = db.Table('cb_companies', metadata, autoload=True)
 db.mapper(CBCompany, cb_companies)
 al_companies = db.Table('al_companies', metadata, autoload=True)
 db.mapper(ALCompany, al_companies)
-cb_company_info = db.Table('cb_company_info', metadata, autoload=True)
-db.mapper(CBCompanyInfo, cb_company_info)
 startup_info = db.Table('startup_info', metadata, autoload=True)
 db.mapper(StartupInfo, startup_info)
 

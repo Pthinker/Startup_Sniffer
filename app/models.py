@@ -1,9 +1,6 @@
 class CBCompany(object):
     pass
 
-class CBCompanyInfo(object):
-    pass
-
 class CBPeople(object):
     pass
 

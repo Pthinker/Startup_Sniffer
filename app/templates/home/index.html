@@ -4,7 +4,7 @@
 <div id="carousel" class="carousel slide" rel="carousel">
     <div class="carousel-inner">
         <div class="active item">
-            <h1 class="alt">DATA SCIENCE FOR STARTUP</h1>
+            <h1 class="alt">DATA SCIENCE FOR Venture Capital</h1>
             <img src="/static/img/city.jpg"/>
         </div>
     </div>
@@ -18,61 +18,5 @@
     <a class="btn btn-large btn-success" href="/predict">Get Started!</a>
 </div>
 
-<hr />
-
-<!--
-<div id="accordion2" class="accordion">
-    <div id="company" class="accordion-body collapse in">
-        <table class="data-table table-bordered table pull-left" id="company-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Twitter</th>
-                    <th>Website</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for record in records %}
-                <tr>
-                    <td>{{record.name}}</td>
-                    <td>{{record.twitter}}</td>
-                    <td>{{record.url}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
--->
-
 {% endblock %}
 
-<script>
-    $(document).ready(function() {
-        $("#company-table").dataTable({
-            "oLanguage": {
-                "sEmptyTable":     "No data available in table",
-                "sInfo":           "Showing _START_ to _END_ of _TOTAL_ entries",
-                "sInfoEmpty":      "Showing 0 to 0 of 0 entries",
-                "sInfoFiltered":   "filtered from _MAX_ total entries",
-                "sInfoPostFix":    "",
-                "sInfoThousands":  ",",
-                "sLengthMenu":     "Show _MENU_ entries",
-                "sLoadingRecords": "Loading...",
-                "sProcessing":     "Processing...",
-                "sSearch":         "Search:",
-                "sZeroRecords":    "No matching records found",
-                "oPaginate": {
-                    "sFirst":    "First",
-                    "sLast":     "Last",
-                    "sNext":     "Next",
-                    "sPrevious": "Previous"
-                },
-                "oAria": {
-                    "sSortAscending":  ": activate to sort column ascending",
-                    "sSortDescending": ": activate to sort column descending"
-                }
-            },
-        });
-    });
-</script>

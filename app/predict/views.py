@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-from app import db, cb_companies, al_companies, cb_company_info, startup_info, APP_STATIC
+from app import db, cb_companies, al_companies, startup_info, APP_STATIC
 from app.models import *
 import pickle
 import os
@@ -36,8 +36,8 @@ def analyze():
     prob = model.predict_proba(row)
     prob = "%.2f%%" % (prob[0][1]*100.0)
     
-    record = db.session.query(cb_company_info).filter(
-            CBCompanyInfo.crunch_id==crunch_id).first()
+    record = db.session.query(cb_companies).filter(
+            CBCompany.crunch_id==crunch_id).first()
     
     com_record = db.session.query(cb_companies).filter(
             CBCompany.crunch_id==crunch_id).first()

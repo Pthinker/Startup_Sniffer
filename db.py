@@ -630,9 +630,6 @@ def main():
     Base.metadata.create_all(engine)
     '''
     # crunchbase data
-    print "Store companies info..."
-    store_cb_company_info()
-    
     print "Store companies..."
     store_cb_companies()
  
