@@ -45,5 +45,3 @@ old/
 
 config.py
 *.sql
-*.pyc
-*.sql
