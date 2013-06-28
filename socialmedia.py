@@ -39,7 +39,10 @@ def throttle_hook(response):
         now = datetime.datetime.utcnow()
         
         time_to_reset = reset - now
-        time_to_sleep = time_to_reset.seconds / remaining
+        if remaining == 0:
+            time_to_sleep = time_to_reset.seconds
+        else:
+            time_to_sleep = time_to_reset.seconds / remaining
 
         sys.stderr.write(
                 "Throttling... Sleeping for %d secs...\n" % time_to_sleep)
@@ -115,11 +118,17 @@ def get_bitly_hash(url):
         print "Cannot get bitly hash for %s" % url
         return None
 
+def bitly_click_count(bitly_hash):
+    """Get bitly url click count
+    """
+    data = bitly.clicks(hash=bitly_hash)
+    return data[0]['global_clicks']
+
 def main():
     #search_tweets("iphone")
     #twitter_user_show("zignallabs")
     
-    #get_bitly_hash('http://google.com')
+    get_bitly_hash('http://google.com')
     
 if __name__ == "__main__":
     main()

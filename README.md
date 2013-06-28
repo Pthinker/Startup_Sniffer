@@ -55,7 +55,7 @@ login to mysql, create a new account(change USER and PASSWD):
 GRANT ALL ON *.* TO USER@localhost IDENTIFIED BY 'PASSWD';
 
 Dump data to sql file to transfter to EC2 host (Optionally):
-mysqldump -u user -p pwd  --databases db_name > db.sql
+mysqldump -uuser -ppwd  --databases db_name > db.sql
 To load into mysql:
 mysql -u user -p pwd db_name < db.sql
 or

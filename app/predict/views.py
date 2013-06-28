@@ -3,6 +3,7 @@ from app import db, cb_companies, al_companies, startup_info, APP_STATIC
 from app.models import *
 import pickle
 import os
+import re
 import pandas as pd
 import numpy as np
 import json
@@ -17,20 +18,26 @@ def index():
     
     df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), 
             header=0, index_col=0)
-    comp_json = json.dumps([cid for cid in df.index.values])
+    comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
     return render_template("predict/index.html", comp_json=comp_json, records=records)
 
 @predict_page.route('/analyze/', methods=['POST'])
 def analyze():
     crunch_id = request.form.get('crunch-id', None)
+    matobj = re.search("\((.*)\)", crunch_id)
+    if matobj:
+        crunch_id = matobj.group(1)
+    else:
+        crunch_id = None
 
     #TODO: handle None case
 
     model = pickle.load(open(os.path.join(APP_STATIC, 'rf.model')))
     df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), 
             header=0, index_col=0)
-
-    comp_json = json.dumps([cid for cid in df.index.values])
+    
+    comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
+    del df['name']
     
     row = np.array(df.ix[crunch_id])
     prob = model.predict_proba(row)

@@ -7,7 +7,8 @@ import re
 import time
 import random
 import urllib2
-from datetime import datetime
+import codecs
+from datetime import date, timedelta
 
 import config
 import socialmedia
@@ -135,11 +136,11 @@ def generate_training_data(session):
     companies = session.query(CBCompany).filter(
             CBCompany.category.in_(categories)).all()
     
-    fh = open('data/training.csv', "w")
-    fh.write("crunch_id,milestone_num,competitor_num,office_num,product_num," + \
-             "service_num,founding_round_num,total_money_raised,acquisition_num," + \
-             "investment_num,vc_num,num_exited_competitor,company_count," + \
-             "exited_company_count,success\n")
+    fh = codecs.open('data/training.csv', "w", encoding='utf-8')
+    fh.write("crunch_id,name,milestone_num,competitor_num,office_num," + \
+             "product_num,service_num,founding_round_num,total_money_raised," + \
+             "acquisition_num,investment_num,vc_num,num_exited_competitor," + \
+             "company_count,exited_company_count,success\n")
     
     for company in companies:
         crunch_id = company.crunch_id
@@ -147,8 +148,13 @@ def generate_training_data(session):
                 CBExit.company==crunch_id).first()
         if exit_record is None: # Negative instances
             if company.founded_year is not None and company.founded_year<2009:
-                success = 0
-                amount = None
+                # dead company or company raised 0 money
+                if (company.dead_year is not None) or \
+                    (company.total_money_raised<=0):
+                    success = 0
+                    amount = None
+                else:
+                    continue
             else:
                 continue
         else: # positive instances
@@ -164,9 +170,9 @@ def generate_training_data(session):
                 company.crunch_id, session)
 
         total_money_raised = float(company.total_money_raised) / 10000000.0
-        success = 1 if company.success==1 else 0
-        fh.write("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%d,%s\n" % \
-                  (company.crunch_id, company.milestone_num, \
+        fh.write('%s,"%s",%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%d,%d\n' % \
+                  (company.crunch_id, company.name, \
+                   company.milestone_num, \
                    company.competitor_num, company.office_num, \
                    company.product_num, company.service_num, \
                    company.founding_round_num, total_money_raised, \
@@ -180,18 +186,19 @@ def generate_testing_data(session):
     """
     companies = session.query(CBCompany).filter(
             CBCompany.category.in_(categories)).filter(
-            CBCompany.founded_year>=2007).all()
+            CBCompany.founded_year>=2000).all()
     
-    fh = open('data/predict_com.csv', "w")
-    fh.write("crunch_id,milestone_num,competitor_num,office_num,product_num,service_num," + \
-             "founding_round_num,total_money_raised,acquisition_num,investment_num,vc_num," + \
-             "num_exited_competitor,company_count,exited_company_count\n")
+    fh = codecs.open('data/predict_com.csv', "w", encoding='utf-8')
+    fh.write("crunch_id,name,milestone_num,competitor_num,office_num," + \
+             "product_num,service_num,founding_round_num,total_money_raised," + \
+             "acquisition_num,investment_num,vc_num,num_exited_competitor," + \
+             "company_count,exited_company_count\n")
 
     for company in companies:
         crunch_id = company.crunch_id
         
         num = session.query(CBExit).filter(CBExit.company==crunch_id).count()
-        if num > 0:
+        if (num > 0) or (company.dead_year is not None):
             continue
 
         num_exited_competitor = exited_competitors_count(
@@ -204,8 +211,8 @@ def generate_testing_data(session):
 
         total_money_raised = float(company.total_money_raised) / 10000000.0
         
-        fh.write("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%d\n" % \
-                  (company.crunch_id, company.milestone_num, \
+        fh.write('%s,"%s",%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%d\n' % \
+                  (company.crunch_id, company.name, company.milestone_num, \
                    company.competitor_num, company.office_num, \
                    company.product_num, company.service_num, \
                    company.founding_round_num, total_money_raised, \
@@ -227,7 +234,7 @@ def update_startup_info(session):
         print al_id
         
         count = session.query(StartupInfo).filter(StartupInfo.al_id==al_id).filter(
-                    StartupInfo.info_date==datetime.today().date()).count()
+                    StartupInfo.info_date==date.today()).count()
         if count > 0:
             continue
         else:
@@ -238,10 +245,16 @@ def update_startup_info(session):
         resp = urllib2.urlopen(al_url)
         profile = json.loads(resp.read())
         
-        record.info_date = datetime.today().date()
+        record.info_date = date.today()
         record.al_id = al_id
-        record.al_follower = profile['follower_count']
-        record.al_quality = profile['quality']
+        if (not "follower_count" in profile) or (not 'quality' in profile):
+            prec = session.query(StartupInfo).filter(StartupInfo.al_id==al_id
+                    ).filter(StartupInfo.info_date==(date.today()-timedelta(1))).first()
+            record.al_follower = prec.al_follower
+            record.al_quality = prec.al_quality
+        else:
+            record.al_follower = profile['follower_count']
+            record.al_quality = profile['quality']
         
         twitter_profile = socialmedia.twitter_user_show(startup.CBCompany.twitter)
         record.twitter_follower = twitter_profile['followers_count']
@@ -276,7 +289,7 @@ def main():
     
     #generate_training_data(session)
     
-    #generate_testing_data(session)
+    generate_testing_data(session)
     
     session.close()
 

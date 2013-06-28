@@ -9,7 +9,7 @@ from scipy import interp
 from sklearn.preprocessing import balance_weights
 
 DATA_FPATH = "data/training.csv"
-SAMPLING_NUM = 3800
+SAMPLING_NUM = 3620
 TREE_NUM = 200
 
 def randomforest(data, targets, tree_num=TREE_NUM):
@@ -51,6 +51,7 @@ def validation():
 
     targets = np.array(df['success'])
     del df['success']
+    del df['name']
     data = np.array(df)
     kf = KFold(data.shape[0], n_folds=5, shuffle=True)
     for train_index, test_index in kf:
@@ -67,6 +68,7 @@ def generate_roc():
     
     targets = np.array(df['success'])
     del df['success']
+    del df['name']
     data = np.array(df)
     kf = KFold(data.shape[0], n_folds=5, shuffle=True)
     
@@ -99,19 +101,18 @@ def build_model():
     
     targets = np.array(df['success'])
     del df['success']
+    del df['name']
     
     data = np.array(df)
     model = randomforest(data, targets, tree_num=200)
     pickle.dump(model, open("data/rf.model", "w"))
 
 def main():
-    #get_sampling_training()
-    
     #generate_roc()
     
-    validation()
+    #validation()
     
-    #build_model()
+    build_model()
 
 
 if __name__ == "__main__":
