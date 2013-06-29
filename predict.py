@@ -98,13 +98,19 @@ def generate_roc():
 def build_model():
     #df = get_training_data()
     df = get_sampling_training()
-    
+
     targets = np.array(df['success'])
     del df['success']
     del df['name']
     
+    columns = df.columns
+
     data = np.array(df)
     model = randomforest(data, targets, tree_num=200)
+    
+    for ind, v in enumerate(model.feature_importances_):
+        print columns[ind], v
+
     pickle.dump(model, open("data/rf.model", "w"))
 
 def main():
