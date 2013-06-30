@@ -35,6 +35,8 @@ sudo pip install scrapy
 
 sudo pip install bitly_api
 
+sudo pip install requests-oauth
+
 ...
 
 Alternatively, you could install required python modules by using:
