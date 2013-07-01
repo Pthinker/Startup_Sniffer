@@ -40,12 +40,12 @@
                     <tbody>
                         {% for record in ranked_list %}
                             <tr>
-                                <td><img src="{{ record[1]['data'][5]}}" width="45" height="45" /></td>
-                                <td>{{ record[1]['data'][0] }}</td>
-                                <td>{{ record[1]['data'][1] }}</td>
-                                <td>{{ record[1]['data'][2] }}</td>
-                                <td>{{ record[1]['data'][3] }}</td>
-                                <td>{{ record[1]['data'][4] }}</td>
+                                <td><img src="{{record[1]['data'][5]}}" width="45" height="45" /></td>
+                                <td><a href="/board/startup/{{record[0]}}">{{record[1]['data'][0]}}</a></td>
+                                <td>{{record[1]['data'][1]}}</td>
+                                <td>{{record[1]['data'][2]}}</td>
+                                <td>{{record[1]['data'][3]}}</td>
+                                <td>{{record[1]['data'][4]}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -72,7 +72,7 @@
                         {% for record in trend_list %}
                             <tr>
                                 <td><img src="{{ record[1]['data'][5]}}" width="45" height="45" /></td>
-                                <td>{{ record[1]['data'][0] }}</td>
+                                <td><a href="/board/startup/{{record[0]}}">{{ record[1]['data'][0] }}</a></td>
                                 <td>{{ record[1]['data'][1] }}</td>
                                 <td>{{ record[1]['data'][2] }}</td>
                                 <td>{{ record[1]['data'][3] }}</td>
