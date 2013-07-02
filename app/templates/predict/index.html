@@ -14,6 +14,18 @@
 
 {% block content %}
 <div class="hero-unit faq" style='margin-top:10px'>
+    <div style="text-align:center">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+    </div>
+
     <div class="ac">
         <form id="predict-form" method="post" action="{{ url_for('predict.analyze') }}">
             <h2>Startup Outcome Prediction</h2>

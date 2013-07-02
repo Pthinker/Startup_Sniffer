@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash
 from app import db, cb_companies, al_companies, startup_info, APP_STATIC
 from app.models import *
 import pickle
@@ -23,20 +23,29 @@ def index():
 
 @predict_page.route('/analyze/', methods=['POST'])
 def analyze():
+    records = db.session.query(al_companies).filter(
+            ALCompany.logo_url != None).limit(22)
+    
+    df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), 
+            header=0, index_col=0)
+    comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
+    
     crunch_id = request.form.get('crunch-id', None)
+    if (crunch_id is None) or (len(crunch_id.strip())==0):
+        flash('Please input valid startup name')
+        return render_template('predict/index.html', comp_json=comp_json, records=records)
+    
     matobj = re.search("\((.*)\)", crunch_id)
     if matobj:
         crunch_id = matobj.group(1)
     else:
         crunch_id = None
-
-    #TODO: handle None case
+    
+    if crunch_id is None:
+        flash('Sorry, the input company is not in our database')
+        return render_template('predict/index.html', comp_json=comp_json, records=records)
 
     model = pickle.load(open(os.path.join(APP_STATIC, 'rf.model')))
-    df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), 
-            header=0, index_col=0)
-    
-    comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
     del df['name']
     
     row = np.array(df.ix[crunch_id])
