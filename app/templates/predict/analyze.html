@@ -5,7 +5,7 @@
     <ul class="nav">
         <li><a href="/">Home</a></li>
         <li class="active"><a href="/predict">Predict</a></li>
-        <li><a href="/board">Sniffer Board</a></li>
+        <li><a href="/board">Leaderboard</a></li>
         <!--<li><a href="/job">Job</a></li>-->
         <li><a href="/about">About</a></li>
     </ul>
@@ -17,7 +17,7 @@
     <div class="ac">
         <form id="predict-form" method="post" action="{{ url_for('predict.analyze') }}">
             <h2>Startup Outcome Prediction</h2>
-            <p>Input company, for example: kaggle, hulu, decide-com, fitfu, etc.</p>
+            <p>Input company, for example: hulu, decide.com, Nambii, etc.</p>
             <input type="text" autocomplete="off" placeholder="Type Company ..." id="crunch-id" 
                 name="crunch-id" data-provide="typeahead" data-items="4" data-source='{{comp_json}}'>
             <a type="" class="search_button btn btn-success" onclick="formSubmit()">
@@ -35,7 +35,7 @@
         <p>
             <span class="label">{{ company.category }}</span>
         </p>
-        <p>URL: <a href="{{ company.url }}">{{ company.url }}</a></p>
+        <p>URL: <a href="{{company.url}}" target="_blank">{{ company.url }}</a></p>
         <p>{{ company.desc }}</p>
         <p><img src="http://www.crunchbase.com/{{ company.img }}" height="50" width="100" /><p>
         {% if company.tags %}
@@ -53,9 +53,11 @@
     <div class="span5 progress progress-success active">
         <div class="bar" style="width: {{prob}};"></div>
     </div>
+    <!--
     <div class="span5">
         <h3>Total money raised: ${{ com_record.total_money_raised }}</h3>
     </div>
+    -->
 </div>
 
 

@@ -96,6 +96,9 @@ def index():
 @board_page.route('/startup')
 @board_page.route('/startup/<int:al_id>')
 def startup(al_id):
+    al_com = db.session.query(ALCompany).filter(
+            ALCompany.angellist_id==al_id).first()
+
     records = db.session.query(StartupInfo).filter(
             StartupInfo.al_id==al_id).order_by(StartupInfo.info_date).all()
 
@@ -118,5 +121,5 @@ def startup(al_id):
              {"key": "Bitly click", "values": bitly_data},
     ];
     
-    return render_template("board/startup.html", data=data)
+    return render_template("board/startup.html", data=data, al_com=al_com)
     

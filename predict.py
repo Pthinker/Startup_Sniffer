@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import KFold
-from sklearn.metrics import roc_curve, auc, precision_score, classification_report
+from sklearn.metrics import roc_curve, auc, precision_score
+from sklearn.metrics import classification_report, accuracy_score
 import pickle
 import pylab as pl
 from scipy import interp
@@ -60,6 +61,7 @@ def validation():
         
         predictions = model.predict(data[test_index])
         #print precision_score(targets[test_index], predictions)
+        print accuracy_score(targets[test_index], predictions)
         print classification_report(targets[test_index], predictions)
 
 def generate_roc():
