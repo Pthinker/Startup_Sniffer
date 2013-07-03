@@ -34,6 +34,10 @@ def before_first_request():
 def index():
     return redirect("/home/index")
 
+@app.route('/slides')
+def slides():
+    return render_template("slides.html")
+
 @app.route('/about')
 def about():
     return render_template("about.html")
