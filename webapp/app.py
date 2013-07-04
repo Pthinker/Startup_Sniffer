@@ -209,7 +209,7 @@ def analyze():
         flash('Sorry, the input company is not in our database')
         return render_template('predict.html', comp_json=comp_json, records=records)
 
-    model = pickle.load(open(os.path.join(APP_STATIC, 'rf.model')))
+    model = pickle.load(open('static/rf.model'))
     del df['name']
     
     row = np.array(df.ix[crunch_id])
