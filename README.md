@@ -64,14 +64,75 @@ or
 login into mysql and:
 source db.sql
 
+
 # Git
 sudo apt-get install git
+
 
 # Domain(Godaddy) and AWS EC2 mapping
 http://www.quora.com/If-I-bought-a-domain-name-from-Godaddy-but-plan-to-use-amazon-EC2-to-run-the-site-do-I-need-hosting-from-Godaddy
 
-# To run Flask server
-Open a new screen, and issue:
-sudo python run.py
 
+# Deploy with mod_wsgi and Apache
+#Get the wsgi apache2 module
+sudo apt-get install libapache2-mod-wsgi
 
+# Edit /etc/apache2/sites-enabled/000-default apache configuration file
+sudo cp /etc/apache2/sites-enabled/000-default /etc/apache2/sites-enabled/000-default-backup
+sudo vim /etc/apache2/sites-enabled/000-default
+
+change the contents to the following
+
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+
+        WSGIDaemonProcess startup_sniffer
+        WSGIScriptAlias / /var/www/startup_sniffer.wsgi
+
+        DocumentRoot /var/www
+        <Directory />
+                WSGIProcessGroup startup_sniffer
+                WSGIApplicationGroup %{GLOBAL}
+                Options FollowSymLinks
+                AllowOverride None
+        </Directory>
+        <Directory /var/www/>
+                WSGIProcessGroup startup_sniffer
+                WSGIApplicationGroup %{GLOBAL}
+                Options Indexes FollowSymLinks MultiViews
+                AllowOverride None
+                Order allow,deny
+                allow from all
+        </Directory>
+
+        ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+        <Directory "/usr/lib/cgi-bin">
+                AllowOverride None
+                Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+                Order allow,deny
+                Allow from all
+        </Directory>
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+#Create the file /var/www/startup_sniffer.wsgi and add the following contents:
+import sys
+sys.path.insert(0, '/home/ubuntu/startup_sniffer/webapp')
+from app import app
+
+# start the apache2 web server:
+sudo apachectl start
+
+# To stop or restart the server:
+sudo apachectl stop
+sudo apachectl restart
+
+# Debug error:
+tail /var/log/apache2/error.log
