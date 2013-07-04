@@ -43,8 +43,8 @@ def throttle_hook(response):
             time_to_sleep = time_to_reset.seconds
         else:
             time_to_sleep = time_to_reset.seconds / remaining
-        if time_to_sleep > 900:
-            time_to_sleep = 900
+        if time_to_sleep > 60:
+            time_to_sleep = 60
 
         sys.stderr.write(
                 "Throttling... Sleeping for %d secs...\n" % time_to_sleep)

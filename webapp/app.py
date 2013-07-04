@@ -16,6 +16,9 @@ import sys
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parentdir)
 
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+APP_STATIC = os.path.join(APP_ROOT, 'static')
+
 app = Flask(__name__)
 app.config.from_object('config')
 
@@ -182,7 +185,7 @@ def startup(al_id):
 def predict():
     records = db.session.query(al_companies).filter(
             ALCompany.logo_url != None).limit(22)
-    df = pd.read_csv('static/predict_com.csv', header=0, index_col=0)
+    df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), header=0, index_col=0)
     comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
     return render_template("predict.html", comp_json=comp_json, records=records)
 
@@ -191,7 +194,7 @@ def analyze():
     records = db.session.query(al_companies).filter(
             ALCompany.logo_url != None).limit(22)
     
-    df = pd.read_csv('static/predict_com.csv', header=0, index_col=0)
+    df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), header=0, index_col=0)
     comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
     
     crunch_id = request.form.get('crunch-id', None)
