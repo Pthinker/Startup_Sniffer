@@ -198,7 +198,7 @@ def analyze():
     crunch_id = request.form.get('crunch-id', None)
     if (crunch_id is None) or (len(crunch_id.strip())==0):
         flash('Please input valid startup name')
-        return render_template('predict/index.html', comp_json=comp_json, records=records)
+        return render_template('predict.html', comp_json=comp_json, records=records)
     
     matobj = re.search("\((.*)\)", crunch_id)
     if matobj:
@@ -208,7 +208,7 @@ def analyze():
     
     if crunch_id is None:
         flash('Sorry, the input company is not in our database')
-        return render_template('predict/index.html', comp_json=comp_json, records=records)
+        return render_template('predict.html', comp_json=comp_json, records=records)
 
     model = pickle.load(open(os.path.join(APP_STATIC, 'rf.model')))
     del df['name']
@@ -248,7 +248,7 @@ def recommend():
     if resp.status == 200:
         profile = resp.data
 
-    return render_template('job/recommend.html', Profile=profile)
+    return render_template('recommend.html', Profile=profile)
 
 @app.route('/login')
 def login():
