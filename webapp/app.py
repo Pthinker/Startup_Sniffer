@@ -191,8 +191,7 @@ def analyze():
     records = db.session.query(al_companies).filter(
             ALCompany.logo_url != None).limit(22)
     
-    df = pd.read_csv(os.path.join('static/predict_com.csv', 'predict_com.csv'), 
-            header=0, index_col=0)
+    df = pd.read_csv('static/predict_com.csv', header=0, index_col=0)
     comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
     
     crunch_id = request.form.get('crunch-id', None)
