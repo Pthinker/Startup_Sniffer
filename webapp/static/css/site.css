@@ -1,0 +1,125 @@
+.errorWrapper {
+    margin: 200px auto;
+    width: 559px;
+    text-align: center;
+    color: #F1F1F1;
+    text-shadow: 1px 1px #333333;
+}
+
+.errorWrapper h1{
+    font-size: 34px;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px #333333;
+
+}
+
+
+.dataTables_length {
+    float: left;
+    width: 40%;
+}
+.dataTables_paginate {
+    float: right;
+    text-align: right;
+    margin:10px 0;
+}
+
+.dataTables_paginate a{
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 15px 15px 15px 15px;
+    display: inline-block;
+    padding: 5px 14px;
+}
+
+.dataTables_info {
+    float: left;
+    width: 60%;
+}
+
+.dataTables_filter {
+    float: right;
+    text-align: right;
+    width: 50%;
+}
+/*
+.elegant-list { 
+    border: 1px solid #cbcbcb;
+    padding: 20px 30px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    background: #f5f5f5
+}
+
+.elegant-list h3 { 
+    margin: 0;
+    border-bottom: 1px solid #cbcbcb;
+    padding: 0 0 10px;
+    text-align: center;
+    text-transform: uppercase;
+    color:#13465f; 
+    -webkit-box-shadow:0 1px 0 #fff;
+    -moz-box-shadow:0 1px 0 #fff;
+    box-shadow:0 1px 0 #fff;
+    font:600 16px/1 "proxima-nova",gotham,helvetica,sans-serif;
+    letter-spacing:.1em
+}
+
+.elegant-list ul { 
+    list-style:none;
+    margin:10px 0 0;
+    padding:0;
+    text-align:center;
+    letter-spacing:-0.31em;
+    text-rendering:optimizespeed
+}
+
+.elegant-list li {
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+    padding:0;
+    text-rendering:auto;
+    display:inline-block;
+    *display:inline;
+    *zoom:1;
+    width: auto;
+}
+
+.elegant-list li.u1of2 {
+    width:50%
+}
+
+.elegant-list li.u1of3 {
+    width:33.33333%
+}
+
+.elegant-list li.u1of4 { 
+    width:25%
+}
+
+.elegant-list li.u1of5 {
+    width:20%
+}
+
+.elegant-list li.small-leading { 
+    margin:10px 0 0
+}
+
+.elegant-list li.medium-leading { 
+    margin:15px 0 0
+}
+
+.elegant-list li.large-leading { 
+    margin:20px 0 0
+}
+
+.elegant-list li img { 
+    max-width:85%
+}
+
+.elegant-list + .elegant-list { 
+    margin-top:30px
+}
+*/
