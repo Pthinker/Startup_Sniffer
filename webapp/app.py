@@ -190,18 +190,22 @@ def startup(al_id):
 def predict():
     records = db.session.query(al_companies).filter(
             ALCompany.logo_url != None).limit(22)
-    df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), header=0, index_col=0)
-    comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
+    #df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), header=0, index_col=0)
+    #comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
+    fp = os.path.join(APP_STATIC, 'com.json')
+    json_data = open(fp).read()
+    comp_json = json.loads(json_data)
     return render_template("predict.html", comp_json=comp_json, records=records)
 
 @app.route('/analyze/', methods=['POST'])
 def analyze():
-    records = db.session.query(al_companies).filter(
-            ALCompany.logo_url != None).limit(22)
+    #records = db.session.query(al_companies).filter(
+    #        ALCompany.logo_url != None).limit(22)
     
-    df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), header=0, index_col=0)
-    comp_json = json.dumps(["%s (%s)" % (df.ix[cid]['name'], cid) for cid in df.index.values])
-    
+    fp = os.path.join(APP_STATIC, 'com.json')
+    json_data = open(fp).read()
+    comp_json = json.loads(json_data)
+
     crunch_id = request.form.get('crunch-id', None)
     if (crunch_id is None) or (len(crunch_id.strip())==0):
         flash('Please input valid startup name')
@@ -218,6 +222,7 @@ def analyze():
         return render_template('predict.html', comp_json=comp_json, records=records)
 
     model = pickle.load(open(os.path.join(APP_STATIC, 'rf.model')))
+    df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), header=0, index_col=0)
     del df['name']
     
     row = np.array(df.ix[crunch_id])

@@ -123,7 +123,6 @@ def build_model():
     pl.xlabel('Relative Importance')
     pl.title('Variable Importance')
     pl.savefig('plots/feature_imp.jpg')
-    pl.show()
 
 
 def main():
