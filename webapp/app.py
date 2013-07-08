@@ -290,6 +290,9 @@ def analyze():
     json_data = open(fp).read()
     comp_json = json.loads(json_data)
 
+    records = db.session.query(al_companies).filter(
+            ALCompany.logo_url != None).limit(22)
+
     crunch_id = request.form.get('crunch-id', None)
     if (crunch_id is None) or (len(crunch_id.strip())==0):
         flash('Please input valid startup name')
@@ -312,6 +315,11 @@ def analyze():
     
     record = db.session.query(precompanies).filter(
             PreCompany.crunch_id == crunch_id).first()
+
+    if record is None:
+        flash('Sorry, the input company is not in our database')
+        return render_template('predict.html', comp_json=comp_json, records=records)
+
     #row = np.array(df.ix[crunch_id])
     row = np.array([record.milestone_num, record.competitor_num, 
                     record.office_num, record.product_num, 
