@@ -11,6 +11,7 @@ import numpy as np
 import pickle
 import json
 from datetime import date, timedelta
+import time
 
 import sys
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -54,6 +55,10 @@ def index():
 @app.route('/slides')
 def slides():
     return render_template("slides.html")
+
+@app.route('/slideshare')
+def slideshare():
+    return render_template("slideshare.html")
 
 @app.route('/about')
 def about():
@@ -166,7 +171,7 @@ def startup(al_id):
     bitly_data = []
 
     for record in records:
-        ts = int(record.info_date.strftime("%s")) * 1000
+        ts = int(round(float(record.info_date.strftime("%s.%f")), 3)) * 1000
         twitter_data.append([ts, record.twitter_follower])
         al_follower_data.append([ts, record.al_follower])
         al_quality_data.append([ts, record.al_quality])

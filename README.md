@@ -86,7 +86,7 @@ change the contents to the following
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
 
-        WSGIDaemonProcess startup_sniffer
+        WSGIDaemonProcess startup_sniffer threads=5
         WSGIScriptAlias / /var/www/startup_sniffer.wsgi
 
         DocumentRoot /var/www

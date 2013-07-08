@@ -94,7 +94,7 @@ def generate_roc():
     pl.ylabel('True Positive Rate')
     pl.title('Mean ROC Curve')
     pl.legend(loc="lower right")
-    pl.savefig('plots/sampling_mean_roc.pdf')
+    pl.savefig('plots/sampling_mean_roc.jpg')
     pl.show()
 
 def build_model():
@@ -109,11 +109,22 @@ def build_model():
 
     data = np.array(df)
     model = randomforest(data, targets, tree_num=200)
-    
-    for ind, v in enumerate(model.feature_importances_):
-        print columns[ind], v
-
     pickle.dump(model, open("data/rf.model", "w"))
+
+    # feature importance 
+    feature_importance = model.feature_importances_
+    # make importances relative to max importance
+    feature_importance = 100.0 * (feature_importance / feature_importance.max())
+    sorted_idx = np.argsort(feature_importance)
+    pos = np.arange(sorted_idx.shape[0]) + .5
+    pl.subplot(1, 2, 2)
+    pl.barh(pos, feature_importance[sorted_idx], align='center')
+    pl.yticks(pos, columns[sorted_idx])
+    pl.xlabel('Relative Importance')
+    pl.title('Variable Importance')
+    pl.savefig('plots/feature_imp.jpg')
+    pl.show()
+
 
 def main():
     #generate_roc()

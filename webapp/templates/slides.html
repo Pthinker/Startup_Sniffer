@@ -21,13 +21,110 @@
 
 <body class="deck-container">
 
-<section class="slide" id="title-slide">
-<h1>StartupSniffer</h1><br />
-<h2><center>Transform gut-driven to data-driven investment</center></h2>
+<section class="slide" id="title">
+    <div style="text-align:center">
+        <h1 style="margin-top:-120px">StartupSniffer</h1>
+        <br /><br /><br /><br /><br /><br /><br /><br />
+        <h3>Transform gut-driven to data-driven investment</h3><br />
+        <div class="span2" style="float:left;text-align:left;margin-left:120px;">
+            <br />
+            <img src="/static/img/slides/insight.png"></img>
+        </div>
+        <div class="span3" style="float:right;text-align:right;margin-right:120px;">
+            Wei Zhang<br />
+            Insight Data Science Fellow<br />
+            2013
+        </div>
+    </div>
 </section>
 
-<section class="slide" id="how-to-overview">
-    <h2>blabla...</h2>
+<section class="slide" id="map">
+    <div style="text-align:center; margin-top:5px;">
+        <h2 style="font-size:40px;">My journey from Indiana to California</h2>
+        <img src="/static/img/slides/map.png" width="80%" height="80%"></img>
+    </div>
+</section>
+
+<section class="slide" id="startup">
+    <div style="text-align:center; margin-top:5px;">
+        <h2 style="font-size:40px;">Fantastic Startup Community</h2>
+        <img src="/static/img/slides/sv.jpg" width="80%" height="80%"></img>
+    </div>
+</section>
+
+<section class="slide" id="money">
+    <div style="text-align:center; margin-top:5px;">
+        <h2 style="font-size:40px;">Problem: which startups to invest?</h2>
+        <img src="/static/img/slides/vc-money.jpg" width="329" height="414" style="margin-top:10px;"></img>
+    </div>
+</section>
+
+<section class="slide" id="vc">
+    <div style="text-align:center; margin-top:5px;">
+        <h2 style="font-size:40px;">Gut-driven Venture Capital Investment</h2>
+        <img src="/static/img/slides/vc.jpg" style="margin-top:10px;"></img>
+    </div>
+</section>
+
+<section class="slide" id="intro">
+    <div style="text-align:center; margin-top:5px;">
+        <img src="/static/img/slides/logo.png" style="margin-top:10px;"></img>
+        <img src="/static/img/slides/bg.png" style="margin-top:10px;"></img>
+        <h3>www.startupsniffer.com</h3>
+        <h3>Make quantitative investment possible</h3>
+    </div>
+</section>
+
+<section class="slide" id="how">
+    <div style="text-align:center; margin-top:5px;">
+        <h2 style="font-size:40px;">Predicting Startup Outcome (IPO/Acquisition)</h2>
+        <ul style="margin-left:250px; text-align:left;">
+            <li>
+                Data: crunchbase.com<br />
+                <img src="/static/img/slides/cb.png" style="margin-top:10px; margin-left:10px;"></img>
+            </li>
+            <li>Feature Engineering: Curated 13 features for each company about company profile, founder profile and VC profile</li>
+            <li>Build Random Forest binary classification model on historical data</li>
+        <ul>
+    </div>
+</section>
+
+<section class="slide" id="board">
+    <div style="text-align:center; margin-top:5px;">
+        <h2 style="font-size:40px;">Startup Leaderboard</h2>
+        <ul style="margin-left:250px; text-align:left;">
+            <li>Tracking >1,000 early stage startups</li>
+            <li>Data is updated every day</li>
+        </ul>
+        <img src="/static/img/slides/board.png" style="margin-top:10px;"></img>
+    </div>
+</section>
+
+<section class="slide" id="board">
+    <div style="text-align:center; margin-top:5px;">
+        <img src="/static/img/slides/tool.png" style="margin-top:10px;"></img>
+    </div>
+</section>
+
+<section class="slide" id="me">
+    <div style="text-align:center; margin-top:5px;">
+        <img src="/static/img/slides/me.png" style="margin-top:10px;"></img>
+    </div>
+</section>
+
+<section class="slide" id="validation">
+    <div style="text-align:center; margin-top:5px;">
+        <h2 style="font-size:40px;">Prediction model validation: 5-fold cross validation</h2>
+        <img src="/static/img/slides/validation.jpg" width="600px" height="450px"></img>
+        <p>Average accuracy: 75%; Average precision: 80%; Average recall: 75%</p>
+    </div>
+</section>
+
+<section class="slide" id="fs">
+    <div style="text-align:center; margin-top:5px;">
+        <h2 style="font-size:40px;">Feature Importance</h2>
+        <img src="/static/img/slides/feature_imp.jpg" width="600px" height="450px"></img>
+    </div>
 </section>
 
 <script src="/static/js/jquery.js"></script>
@@ -38,7 +135,7 @@
 <script src="/static/deck/extensions/navigation/deck.navigation.js"></script>
 <script src="/static/deck/extensions/hash/deck.hash.js"></script>
 
-<script type='text/javascript' src='http://www.x3dom.org/x3dom/src/x3dom.js'></script>
+<!--<script type='text/javascript' src='http://www.x3dom.org/x3dom/src/x3dom.js'></script>-->
 
 <script>
     $(function() {
