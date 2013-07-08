@@ -212,6 +212,28 @@ class AngellistPeople(Base):
     investor = Column(Boolean)
     locations = Column(String(100))
 
+class PreCompany(Base):
+    """ Model class for companies to predict
+    """
+    __tablename__ = 'precompanies'
+    
+    id = Column(Integer, primary_key=True)
+    crunch_id = Column(String(200), nullable=False, index=True, unique=True)
+    name = Column(String(250), nullable=False)
+    milestone_num = Column(Integer)
+    competitor_num = Column(Integer)
+    office_num = Column(Integer)
+    product_num = Column(Integer)
+    service_num = Column(Integer)
+    founding_round_num = Column(Integer)
+    total_money_raised = Column(Float)
+    acquisition_num = Column(Integer)
+    investment_num = Column(Integer)
+    vc_num = Column(Integer)
+    num_exited_competitor = Column(Integer)
+    company_count = Column(Integer)
+    exited_company_count = Column(Integer)
+
 def store_cb_companies():
     """ Parse crunchbase company json files and save into database
     """

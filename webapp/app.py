@@ -31,6 +31,8 @@ al_companies = db.Table('al_companies', metadata, autoload=True)
 db.mapper(ALCompany, al_companies)
 startup_info = db.Table('startup_info', metadata, autoload=True)
 db.mapper(StartupInfo, startup_info)
+precompanies = db.Table('precompanies', metadata, autoload=True)
+db.mapper(PreCompany, precompanies)
 
 oauth = OAuth()
 linkedin = oauth.remote_app(
@@ -199,9 +201,6 @@ def predict():
 
 @app.route('/analyze/', methods=['POST'])
 def analyze():
-    #records = db.session.query(al_companies).filter(
-    #        ALCompany.logo_url != None).limit(22)
-    
     fp = os.path.join(APP_STATIC, 'com.json')
     json_data = open(fp).read()
     comp_json = json.loads(json_data)
@@ -222,10 +221,21 @@ def analyze():
         return render_template('predict.html', comp_json=comp_json, records=records)
 
     model = pickle.load(open(os.path.join(APP_STATIC, 'rf.model')))
-    df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), header=0, index_col=0)
-    del df['name']
     
-    row = np.array(df.ix[crunch_id])
+    #df = pd.read_csv(os.path.join(APP_STATIC, 'predict_com.csv'), header=0, index_col=0)
+    #del df['name']
+    
+    record = db.session.query(precompanies).filter(
+            PreCompany.crunch_id == crunch_id).first()
+    #row = np.array(df.ix[crunch_id])
+    row = np.array([record.milestone_num, record.competitor_num, 
+                    record.office_num, record.product_num, 
+                    record.service_num, record.founding_round_num, 
+                    record.total_money_raised, record.acquisition_num, 
+                    record.investment_num, record.vc_num, 
+                    record.num_exited_competitor, record.company_count, 
+                    record.exited_company_count])
+    
     prob = model.predict_proba(row)
     prob = "%.2f%%" % (prob[0][1]*100.0)
     

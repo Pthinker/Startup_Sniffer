@@ -9,6 +9,7 @@ import random
 import urllib2
 import codecs
 from datetime import date, timedelta
+import pandas as pd
 
 import config
 import socialmedia
@@ -49,6 +50,10 @@ class ALPeople(object):
 class StartupInfo(object):
     pass
 
+class PreCompany(object):
+    pass
+
+
 def load_session():
     """Connectiong to exisitng database and return session
     """
@@ -72,6 +77,9 @@ def load_session():
 
     startup_info = Table('startup_info', metadata, autoload=True)
     mapper(StartupInfo, startup_info)
+
+    precompanies = Table('precompanies', metadata, autoload=True)
+    mapper(PreCompany, precompanies)
 
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -284,12 +292,40 @@ def update_bity_hash(session):
 
     session.commit()
 
+def populate_company(session):
+    """ Insert predict companies into database
+    """
+    df = pd.read_csv(os.path.join('webapp/static/predict_com.csv'), header=0, index_col=0)
+    for cid in df.index.values:
+        company = PreCompany()
+        
+        company.crunch_id = cid
+        company.name = df.ix[cid]['name']
+        company.milestone_num = df.ix[cid]['milestone_num']
+        company.competitor_num = df.ix[cid]['competitor_num']
+        company.office_num = df.ix[cid]['office_num']
+        company.product_num = df.ix[cid]['product_num']
+        company.service_num = df.ix[cid]['service_num']
+        company.founding_round_num = df.ix[cid]['founding_round_num']
+        company.total_money_raised = df.ix[cid]['total_money_raised']
+        company.acquisition_num = df.ix[cid]['acquisition_num']
+        company.investment_num = df.ix[cid]['investment_num']
+        company.vc_num = df.ix[cid]['vc_num']
+        company.num_exited_competitor = df.ix[cid]['num_exited_competitor']
+        company.company_count = df.ix[cid]['company_count']
+        company.exited_company_count = df.ix[cid]['exited_company_count']
+
+        session.add(company)
+    session.commit()
+
 def main():
     session = load_session()
     
     #generate_training_data(session)
     
-    generate_testing_data(session)
+    #generate_testing_data(session)
+
+    populate_company(session)
     
     session.close()
 

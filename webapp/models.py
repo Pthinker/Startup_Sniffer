@@ -32,3 +32,6 @@ class ALPeople(object):
 class StartupInfo(object):
     pass
 
+class PreCompany(object):
+    pass
+
