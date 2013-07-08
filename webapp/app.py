@@ -330,16 +330,23 @@ def analyze():
                     record.exited_company_count])
     
     prob = model.predict_proba(row)
+    prob_value = prob[0][1]
     prob = "%.2f%%" % (prob[0][1]*100.0)
     
+    if prob_value<=0.3:
+        valuation = "Don't bother"
+    else:
+        regression_model = pickle.load(open(os.path.join(APP_STATIC, 'rf_regression.model')))
+        valuation = regression_model.predict(row)[0]
+        valuation = "$ %.2f Million" % valuation
+
     record = db.session.query(cb_companies).filter(
             CBCompany.crunch_id==crunch_id).first()
     
     com_record = db.session.query(cb_companies).filter(
             CBCompany.crunch_id==crunch_id).first()
-    
     return render_template("analyze.html", prob=prob, \
-            company=record, comp_json=comp_json, com_record=com_record)
+            company=record, comp_json=comp_json, com_record=com_record, valuation=valuation)
 
 @app.route('/job')
 def job():

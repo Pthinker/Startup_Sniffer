@@ -318,6 +318,48 @@ def populate_company(session):
         session.add(company)
     session.commit()
 
+def generate_regression_data(session):
+    """ Generate companies data for regression model
+    """
+    companies = session.query(CBCompany).filter(
+            CBCompany.category.in_(categories)).all()
+    
+    fh = codecs.open('data/regression.csv', "w", encoding='utf-8')
+    fh.write("crunch_id,name,milestone_num,competitor_num,office_num," + \
+             "product_num,service_num,founding_round_num,total_money_raised," + \
+             "acquisition_num,investment_num,vc_num,num_exited_competitor," + \
+             "company_count,exited_company_count,valuation\n")
+    
+    for company in companies:
+        crunch_id = company.crunch_id
+        exit_record = session.query(CBExit).filter(
+                CBExit.company==crunch_id).first()
+        if exit_record is not None and exit_record.valuation is not None:
+            amount = exit_record.valuation
+            amount /= float(1000000)
+        else:
+            continue
+
+        num_exited_competitor = exited_competitors_count(
+                company.crunch_id, session)
+        
+        company_count = founded_company_count(company.crunch_id, session)
+
+        exited_company_count = founded_company_exit_count(
+                company.crunch_id, session)
+
+        total_money_raised = float(company.total_money_raised) / 10000000.0
+        fh.write('%s,"%s",%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%d,%d,%d,%f\n' % \
+                  (company.crunch_id, company.name, \
+                   company.milestone_num, \
+                   company.competitor_num, company.office_num, \
+                   company.product_num, company.service_num, \
+                   company.founding_round_num, total_money_raised, \
+                   company.acquisition_num, company.investment_num, \
+                   company.vc_num, num_exited_competitor, company_count, \
+                    exited_company_count, amount))
+    fh.close()
+
 def main():
     session = load_session()
     
@@ -325,7 +367,9 @@ def main():
     
     #generate_testing_data(session)
 
-    populate_company(session)
+    generate_regression_data(session)
+
+    #populate_company(session)
     
     session.close()
 

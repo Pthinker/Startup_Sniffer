@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn import svm
+from sklearn.linear_model import LogisticRegression
 from sklearn.cross_validation import KFold
 from sklearn.metrics import roc_curve, auc, precision_score
 from sklearn.metrics import classification_report, accuracy_score
@@ -10,6 +12,7 @@ from scipy import interp
 from sklearn.preprocessing import balance_weights
 
 DATA_FPATH = "data/training.csv"
+REGRESSION_FPATH = "data/regression.csv"
 SAMPLING_NUM = 3620
 TREE_NUM = 200
 
@@ -29,6 +32,24 @@ def weighted_randomforest(data, targets, tree_num=TREE_NUM):
                                    verbose=0, 
                                    compute_importances=True) 
     model.fit(data, targets, balance_weights(targets))
+    return model
+
+def randomforest_regression(data, targets, tree_num=TREE_NUM):
+    model = RandomForestRegressor(n_estimators=tree_num, 
+                                  n_jobs=4, 
+                                  max_features=data.shape[1]/2+1, 
+                                  verbose=0, 
+                                  compute_importances=True) 
+    model.fit(data, targets)
+    return model
+
+def svm_model(data, targets):
+    model = svm.SVC()
+    model.fit(data, targets)
+    return model
+
+def logistic_model(data, targets):
+    model = LogisticRegression().fit(data, targets)
     return model
 
 def get_sampling_training():
@@ -56,8 +77,9 @@ def validation():
     data = np.array(df)
     kf = KFold(data.shape[0], n_folds=5, shuffle=True)
     for train_index, test_index in kf:
-        model = randomforest(data[train_index], targets[train_index], tree_num=TREE_NUM)
-        #model = weighted_randomforest(data[train_index], targets[train_index], tree_num=TREE_NUM)
+        model = weighted_randomforest(data[train_index], targets[train_index], tree_num=TREE_NUM)
+        #model = svm_model(data[train_index], targets[train_index])
+        #model = logistic_model(data[train_index], targets[train_index])
         
         predictions = model.predict(data[test_index])
         #print precision_score(targets[test_index], predictions)
@@ -97,6 +119,17 @@ def generate_roc():
     pl.savefig('plots/sampling_mean_roc.jpg')
     pl.show()
 
+def build_regression_model():
+    df = pd.read_csv(REGRESSION_FPATH, header=0, index_col=0)
+    targets = np.array(df['valuation'])
+    del df['valuation']
+    del df['name']
+    
+    data = np.array(df)
+    model = randomforest_regression(data, targets, tree_num=200)
+    pickle.dump(model, open("data/rf_regression.model", "w"))
+    
+
 def build_model():
     #df = get_training_data()
     df = get_sampling_training()
@@ -127,10 +160,9 @@ def build_model():
 
 def main():
     #generate_roc()
-    
     #validation()
-    
-    build_model()
+    #build_model()
+    build_regression_model()
 
 
 if __name__ == "__main__":
