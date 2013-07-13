@@ -249,8 +249,11 @@ def startup(al_id):
     al_com = db.session.query(ALCompany).filter(
             ALCompany.angellist_id==al_id).first()
 
+    start_date = date.today()-timedelta(15)
     records = db.session.query(StartupInfo).filter(
-            StartupInfo.al_id==al_id).order_by(StartupInfo.info_date).all()
+            StartupInfo.al_id==al_id).filter(
+            StartupInfo.info_date>=start_date).order_by(
+                    StartupInfo.info_date).all()
 
     twitter_data = []
     al_follower_data = []
