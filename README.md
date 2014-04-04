@@ -54,8 +54,9 @@ sudo apt-get install libmysqlclient-dev
 
 sudo pip install MySQL-python
 
-login to mysql, create a new account(change USER and PASSWD):
-GRANT ALL ON *.* TO USER@localhost IDENTIFIED BY 'PASSWD';
+login to mysql, create a new account(change USER and PASSWD): 
+
+GRANT ALL ON \*\.\* TO USER@localhost IDENTIFIED BY 'PASSWD';
 
 Dump data to sql file to transfter to EC2 host (Optionally):
 mysqldump -uuser -ppwd  --databases db_name > db.sql
