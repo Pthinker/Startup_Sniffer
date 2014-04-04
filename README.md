@@ -49,6 +49,7 @@ sudo apt-get install python-flask
 
 # Mysql
 sudo apt-get install mysql-server
+
 sudo apt-get install libmysqlclient-dev
 
 sudo pip install MySQL-python
